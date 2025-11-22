@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { api } from '../api/client';
 import { AuthCard } from '../components/ui/AuthCard';
 import { TextInput } from '../components/ui/TextInput';
+import { Link } from 'react-router-dom';
 
 interface Village { id: string | number; name: string; population?: number; district?: string; }
 
@@ -33,18 +34,18 @@ const VillageList: React.FC = () => {
   }, [filter, villages]);
 
   return (
-    <AuthCard title="Villages" subtitle="Browse the list" backTo="/">
+    <AuthCard title="Villages" subtitle="Browse the list" backTo="/profile-manage">
       <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
         <TextInput placeholder="Search villages..." value={filter} onChange={e=>setFilter(e.target.value)} />
         {loading && <p style={{ fontSize:'0.85rem' }}>Loading...</p>}
         {error && <div className="field-error" style={{ marginBottom:'0.5rem' }}>{error}</div>}
         {!loading && !error && filtered.length === 0 && <p style={{ fontSize:'0.8rem' }}>No villages match.</p>}
-        <div style={{ maxHeight:320, overflowY:'auto', borderRadius:12, background:'#fff', padding:'0.5rem', boxShadow:'var(--shadow-soft)' }}>
+        <div style={{ maxHeight: '60vh', overflowY:'auto', borderRadius:12, background:'#fff', padding:'0.5rem', boxShadow:'var(--shadow-soft)' }}>
           {filtered.map(v => (
             <div key={v.id} style={{ padding:'0.6rem 0.7rem', borderBottom:'1px solid var(--color-border)' }}>
-              <div style={{ fontWeight:600 }}>
+              <Link to={`/villages/${encodeURIComponent(v.name)}`} style={{ fontWeight:600, textDecoration:'none', color:'var(--color-text)' }}>
                 {v.name}
-              </div>
+              </Link>
             </div>
           ))}
         </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import Signup from "./Signup";
 import Login from "./Login";
@@ -7,45 +7,61 @@ import ResetPassword from "./ResetPassword";
 import Dashboard from "./Dashboard";
 import UserDetailsForm from "./UserDetailsForm";
 import ProfileView from "./ProfileView";
+import ProfileManage from "./ProfileManage";
 import { useAuth } from "../hooks/AuthContext";
 import { AuthLayout } from "../components/ui/AuthLayout";
+import { MainLayout } from "../components/ui/MainLayout";
 import { AuthCard } from "../components/ui/AuthCard";
 import { Button } from "../components/ui/Button";
 import VillageList from "./VillageList";
+import VillagePeople from "./VillagePeople";
+import UserDetail from "./UserDetail";
 import InvitationPage from "./invitation";
+import PreviousResultForm from "./PreviousResultForm";
+import AdminDashboard from "./AdminDashboard";
 
 const App: React.FC = () => {
-  const { token, logout, hasProfile } = useAuth();
+  const { token, logout, finalLogout, isAdmin } = useAuth();
   const location = useLocation();
 
   // Central redirect: when authenticated and profile status known, move user
-  if (token && hasProfile !== null) {
-    const target = hasProfile ? "/dashboard" : "/user-details";
-    if (
-      location.pathname === "/" ||
-      location.pathname === "/login" ||
-      location.pathname === "/signup"
-    ) {
-      return <Navigate to={target} replace />;
-    }
+  // Simplify redirect logic and exclude profile-manage so it doesn't bounce back
+  if (token && ["/", "/login", "/signup"].includes(location.pathname)) {
+    return (
+      <Navigate to={isAdmin ? "/admin-dashboard" : "/profile-manage"} replace />
+    );
   }
 
-  console.log(token, "dd");
-  console.log(hasProfile, "dhdhdhdh");
+  useEffect(() => {
+    if (token && isAdmin && location.pathname === "/profile-manage") {
+      window.location.replace("/admin-dashboard");
+    }
+  }, [token, isAdmin, location.pathname]);
 
+  const isAuthRoute = [
+    "/",
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
+  ].includes(location.pathname);
+  const Layout = isAuthRoute ? AuthLayout : MainLayout;
   return (
-    <AuthLayout>
+    <Layout>
       <Routes>
-        <Route path="/" element={<InvitationPage />} />
+  <Route path="/" element={<InvitationPage />} />
+  <Route path="/previous-result" element={<PreviousResultForm />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/dashboard" element={<ProfileView />} />
+        <Route path="/profile-manage" element={<ProfileManage />} />
         <Route path="/village-list" element={<VillageList />} />
-        {/* <Route path="/dashboard" element={token ? (hasProfile ? <ProfileView /> : <Navigate to="/user-details" replace />) : <Navigate to="/login" replace />} /> */}
+        <Route path="/villages/:villageName" element={<VillagePeople />} />
+        <Route path="/users/:userId" element={<UserDetail />} />
         <Route path="/user-details" element={<UserDetailsForm />} />
-        {/* <Route path="/user-details" element={token ? (!hasProfile ? <UserDetailsForm /> : <Navigate to="/dashboard" replace />) : <Navigate to="/login" replace />} /> */}
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route
           path="/logout"
           element={
@@ -56,12 +72,13 @@ const App: React.FC = () => {
           }
         />
       </Routes>
-    </AuthLayout>
+    </Layout>
   );
 };
 export default App;
 
-{/* <Route
+{
+  /* <Route
   path="/"
   element={
     token ? (
@@ -91,4 +108,5 @@ export default App;
       </AuthCard>
     )
   }
-/>; */}
+/>; */
+}

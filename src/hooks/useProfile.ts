@@ -5,9 +5,13 @@ export interface ProfileData {
   profile: {
     village?: string;
     name?: string;
+    age?: number;
     totalFamilyMembers?: number;
     currentAddress?: string;
     businessDetails?: string;
+    phoneNumber?: string;
+    cityName?: string;
+    businessType?: string;
   } | null;
   familyMembers: Array<{
     memberName: string;
@@ -15,6 +19,13 @@ export interface ProfileData {
     std?: string;
     resultImage?: string;
     percentage?: number;
+  activityType?: string;
+  businessWorkType?: string;
+  businessName?: string;
+  businessDescription?: string;
+  memberPhone?: string;
+  relation?: string;
+  noneCategory?: string;
   }>;
 }
 

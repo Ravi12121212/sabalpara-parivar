@@ -10,9 +10,11 @@ interface ImportMeta {
 import axios from 'axios';
 
 const rawEnv = (import.meta as any).env || {};
-const baseURL = rawEnv.VITE_API_URL || 'http://localhost:3001/api';
+const baseURL = rawEnv.VITE_API_URL || 'http://localhost:3000/api';
 
 export const api = axios.create({ baseURL });
+// Bypass ngrok browser warning banner
+api.defaults.headers.common['ngrok-skip-browser-warning'] = 'true';
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');

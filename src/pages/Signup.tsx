@@ -44,7 +44,7 @@ const Signup: React.FC = () => {
         <TextInput
           placeholder="Email"
           value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          onChange={(e) => setForm({ ...form, email: e.target.value.toLowerCase().trim() })}
         />
         <PhoneInput
           value={form.phone}
