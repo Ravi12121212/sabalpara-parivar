@@ -101,7 +101,7 @@ const PreviousResultForm: React.FC = () => {
         <input className="input" placeholder="વર્તમાન રહેઠાણ શહેર" value={form.currentResidenceCity} onChange={e=>setForm(f=>({...f,currentResidenceCity:e.target.value}))} />
         <input className="input" placeholder="પિતાનું પૂરું નામ" value={form.fatherFullName} onChange={e=>setForm(f=>({...f,fatherFullName:e.target.value}))} />
         <input className="input" placeholder="વિદ્યાર્થીનું પૂરું નામ" value={form.studentFullName} onChange={e=>setForm(f=>({...f,studentFullName:e.target.value}))} />
-        <input className="input" placeholder="મોબાઈલ નંબર" value={form.mobileNumber} onChange={e=>setForm(f=>({...f,mobileNumber:e.target.value}))} />
+        <input className="input" placeholder="મોબાઈલ નંબર" type="number" value={form.mobileNumber} onChange={e=>setForm(f=>({...f,mobileNumber:e.target.value}))} />
         <input className="input" placeholder="વર્તમાન અભ્યાસ વર્ષ (૨૫/૨૬)" value={form.currentStudyYear_25_26} onChange={e=>setForm(f=>({...f,currentStudyYear_25_26:e.target.value}))} />
         <input className="input" placeholder="ગત અભ્યાસ વર્ષ (૨૪/૨૫)" value={form.currentStudyYear_24_25} onChange={e=>setForm(f=>({...f,currentStudyYear_24_25:e.target.value}))} />
         <input className="input" placeholder="ટકાવારી" type="number" value={form.percentage} onChange={e=>setForm(f=>({...f,percentage:e.target.value}))} />
