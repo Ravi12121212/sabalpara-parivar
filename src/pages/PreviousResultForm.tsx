@@ -32,6 +32,7 @@ const PreviousResultForm: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const pickFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,6 +63,7 @@ const PreviousResultForm: React.FC = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+  setSuccess(null);
     const missing: string[] = [];
     if (!form.gamnuName.trim()) missing.push('gamnu name');
     if (!form.currentResidenceCity.trim()) missing.push('current residence city');
@@ -71,10 +73,12 @@ const PreviousResultForm: React.FC = () => {
     if (!form.currentStudyYear_25_26.trim()) missing.push('current study year 25/26');
     if (!form.currentStudyYear_24_25.trim()) missing.push('current study year 24/25');
     if (form.percentage === '' || isNaN(Number(form.percentage))) missing.push('percentage');
+    if (!file) missing.push('result image/pdf file');
     if (missing.length) { setError('Please fill: ' + missing.join(', ')); return; }
     setSaving(true);
     try {
       let url = await uploadFile();
+      if (!url) { throw new Error('File upload failed or missing'); }
       const payload = {
         gamnuName: form.gamnuName,
         currentResidenceCity: form.currentResidenceCity,
@@ -87,7 +91,14 @@ const PreviousResultForm: React.FC = () => {
         resultFileUrl: url,
       };
       await api.post('/previous-results', payload);
-      navigate('/');
+      setSuccess('Result submitted successfully.');
+      // Reset form after success
+      setForm(empty);
+      setFile(null);
+      // Optionally redirect after short delay
+      setTimeout(() => {
+        navigate('/');
+      }, 1200);
     } catch (e:any) {
       setError(e.response?.data?.message || e.message || 'Save failed');
     } finally { setSaving(false); }
@@ -96,7 +107,8 @@ const PreviousResultForm: React.FC = () => {
   return (
     <AuthCard title="ગત વર્ષનું પરિણામ" subtitle="તમારી અભ્યાસ વિગતો સબમિટ કરો" backTo="/">
       <form onSubmit={submit} className="member-editor">
-        {error && <div className="field-error" style={{ marginBottom:'0.75rem' }}>{error}</div>}
+  {error && <div className="field-error" style={{ marginBottom:'0.75rem' }}>{error}</div>}
+  {success && <div className="field-success" style={{ marginBottom:'0.75rem', background:'#e6ffed', border:'1px solid #95e1a3', color:'#0f5132', padding:'0.5rem 0.75rem', borderRadius:8 }}>✅ {success}</div>}
         <input className="input" placeholder="ગામનુ નામ" value={form.gamnuName} onChange={e=>setForm(f=>({...f,gamnuName:e.target.value}))} />
         <input className="input" placeholder="વર્તમાન રહેઠાણ શહેર" value={form.currentResidenceCity} onChange={e=>setForm(f=>({...f,currentResidenceCity:e.target.value}))} />
         <input className="input" placeholder="પિતાનું પૂરું નામ" value={form.fatherFullName} onChange={e=>setForm(f=>({...f,fatherFullName:e.target.value}))} />
@@ -114,7 +126,7 @@ const PreviousResultForm: React.FC = () => {
         </div>
         <div className="file-picker" style={{ marginTop:'0.5rem' }}>
           <button type="button" className="file-picker-button" onClick={() => document.getElementById('prev-result-file')?.click()}>{file ? 'ફાઇલ બદલો' : 'ફાઇલ અપલોડ કરો (PDF/Image)'}{uploading && ' ...અપલોડ કરી રહ્યું છે'}</button>
-          <span className="file-name">{file?.name || 'કોઈ ફાઇલ પસંદ કરી નથી'}</span>
+          <span className="file-name">{file?.name || 'કોઈ ફાઇલ પસંદ કરી નથી (આવશ્યક)'}</span>
           <input id="prev-result-file" className="file-hidden" type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={pickFile} disabled={uploading} />
         </div>
         <div className="profile-actions" style={{ marginTop:'1rem' }}>

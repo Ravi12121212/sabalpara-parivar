@@ -10,7 +10,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const toggle = () => setOpen(o => !o);
   const linkStyle: React.CSSProperties = { textDecoration:'none', padding:'0.5rem 0.75rem', borderRadius:6, display:'block', color:'var(--color-text)', fontSize:'0.9rem', fontWeight:500 };
   const activeBg = 'rgba(0,0,0,0.06)';
-  const hideHeader = location.pathname === '/previous-result';
+  const hideHeader = location.pathname === '/previous-result' || location.pathname === '/previous-year-result';
   return (
     <div style={{ minHeight:'100vh', display:'flex', flexDirection:'column', background:'var(--color-bg)' }}>
       {!hideHeader && (

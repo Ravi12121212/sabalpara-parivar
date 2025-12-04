@@ -19,6 +19,7 @@ import UserDetail from "./UserDetail";
 import InvitationPage from "./invitation";
 import PreviousResultForm from "./PreviousResultForm";
 import AdminDashboard from "./AdminDashboard";
+import PreviousYearResult from "./PreviousYearResult";
 
 const App: React.FC = () => {
   const { token, logout, finalLogout, isAdmin } = useAuth();
@@ -51,6 +52,7 @@ const App: React.FC = () => {
       <Routes>
   <Route path="/" element={<InvitationPage />} />
   <Route path="/previous-result" element={<PreviousResultForm />} />
+  <Route path="/previous-year-result" element={<PreviousYearResult />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
