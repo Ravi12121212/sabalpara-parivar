@@ -219,14 +219,6 @@ const PreviousYearResult: React.FC = () => {
                   <td style={{ borderBottom:'1px solid #f0f0f0', padding:'0.5rem' }}>{r.createdAt ? new Date(r.createdAt).toLocaleDateString() : '-'}</td>
                   <td style={{ borderBottom:'1px solid #f0f0f0', padding:'0.5rem' }}>
                     {r.resultFileUrl ? (
-                      // <a href={fileUrl(r.resultFileUrl)} target="_blank" rel="noreferrer" style={{ display:'inline-block' }}>
-                      //   <img
-                      //     src={fileUrl(r.resultFileUrl)}
-                      //     alt="Result"
-                      //     style={{ width:64, height:64, objectFit:'cover', borderRadius:6, border:'1px solid #eee' }}
-                      //     onError={(e)=>{ (e.target as HTMLImageElement).style.display = 'none'; }}
-                      //   />
-                      // </a>
                       <a href={fileUrl(r.resultFileUrl)} target="_blank" rel="noreferrer" style={{ display:'inline-block' }}>
                         <img
                           src={fileUrl(r.resultFileUrl)}
@@ -236,7 +228,61 @@ const PreviousYearResult: React.FC = () => {
                         />
                       </a>
                     ) : (
-                      <span style={{ color:'#999' }}>—</span>
+                      <div style={{ display:'flex', flexDirection:'column', gap:6, }}>
+                        {(() => {
+                          const inputId = `file-${r._id}`;
+                          const onFileChange = async (ev: React.ChangeEvent<HTMLInputElement>) => {
+                            const file = ev.target.files?.[0];
+                            if (!file) return;
+                            try {
+                              const fd = new FormData();
+                              fd.append('file', file);
+                              const up = await api.post('/previous-result-upload', fd, {
+                                headers: { 'Content-Type': 'multipart/form-data' },
+                              });
+                              const url = up.data?.url;
+                              if (!url) throw new Error('Upload did not return URL');
+                              await api.post(`/previous-results/image`, { url, id: r._id });
+                              // refresh list
+                              const resp = await api.get('/previous-results');
+                              const payload = resp.data;
+                              const list = Array.isArray(payload) ? payload : (payload?.results || []);
+                              setResults(list);
+                            } catch (e: any) {
+                              alert(e?.response?.data?.message || e?.message || 'Upload failed');
+                            } finally {
+                              ev.target.value = '';
+                            }
+                          };
+                          return (
+                            <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                              <input
+                                id={inputId}
+                                type="file"
+                                accept="image/*,application/pdf"
+                                onChange={onFileChange}
+                                style={{ position:'absolute', width:1, height:1, padding:0, margin:-1, overflow:'hidden', clip:'rect(0 0 0 0)', border:0 }}
+                              />
+                              <label
+                                htmlFor={inputId}
+                                style={{
+                                  display:'inline-block',
+                                  padding:'0.4rem 0.7rem',
+                                  border:'1px solid blue',
+                                  borderRadius:6,
+                                  background:'#007bff', // sky blue
+                                  color:'#ffffff',
+                                  cursor:'pointer',
+                                  fontSize:12,
+                                  boxShadow:'0 1px 2px rgba(0,0,0,0.06)'
+                                }}
+                              >
+                                Select image/pdf
+                              </label>
+                            </div>
+                          );
+                        })()}
+                      </div>
                     )}
                   </td>
                   <td style={{ borderBottom:'1px solid #f0f0f0', padding:'0.5rem' }}>
