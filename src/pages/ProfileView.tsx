@@ -30,8 +30,7 @@ const ProfileView: React.FC = () => {
           <strong>{m.memberName}</strong><br />
           {m.age && <span>Age: {m.age} </span>}
           {m.std && <span>Std: {m.std} </span>}
-          {m.percentage !== undefined && <span>Percentage: {m.percentage}% </span>}
-          {m.resultImage && <div><img src={m.resultImage} alt={m.memberName} style={{ maxWidth:'120px', marginTop:'0.25rem' }} /></div>}
+          
         </div>
       ))}
       <Link to="/user-details">Edit Profile</Link>

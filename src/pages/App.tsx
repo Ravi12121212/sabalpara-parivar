@@ -19,25 +19,32 @@ import UserDetail from "./UserDetail";
 import InvitationPage from "./invitation";
 import PreviousResultForm from "./PreviousResultForm";
 import AdminDashboard from "./AdminDashboard";
+import AdminWelcome from "./AdminWelcome";
 import PreviousYearResult from "./PreviousYearResult";
+import CommitteeMembers from "./CommitteeMembers";
+import GalleryPage from "./Gallery";
+import Businesses from "./Businesses";
+import BusinessUsers from "./BusinessUsers";
+import Logout from "./Logout";
+import RequireAdmin from "../components/RequireAdmin";
 
 const App: React.FC = () => {
-  const { token, logout, finalLogout, isAdmin } = useAuth();
+  const { token, logout, finalLogout, isAdmin, initialized } = useAuth();
   const location = useLocation();
 
   // Central redirect: when authenticated and profile status known, move user
   // Simplify redirect logic and exclude profile-manage so it doesn't bounce back
-  if (token && ["/", "/login", "/signup"].includes(location.pathname)) {
-    return (
-      <Navigate to={isAdmin ? "/admin-dashboard" : "/profile-manage"} replace />
-    );
+  // Early guard is fine (no state updates here)
+  if (initialized && token && ["/", "/login", "/signup"].includes(location.pathname)) {
+    return <Navigate to={isAdmin ? "/admin-welcome" : "/profile-manage"} replace />;
   }
 
   useEffect(() => {
+    if (!initialized) return;
     if (token && isAdmin && location.pathname === "/profile-manage") {
       window.location.replace("/admin-dashboard");
     }
-  }, [token, isAdmin, location.pathname]);
+  }, [initialized, token, isAdmin, location.pathname]);
 
   const isAuthRoute = [
     "/",
@@ -50,9 +57,9 @@ const App: React.FC = () => {
   return (
     <Layout>
       <Routes>
-  <Route path="/" element={<InvitationPage />} />
-  <Route path="/previous-result" element={<PreviousResultForm />} />
-  <Route path="/previous-year-result" element={<PreviousYearResult />} />
+        <Route path="/" element={<InvitationPage />} />
+        <Route path="/previous-result" element={<PreviousResultForm />} />
+        <Route path="/previous-year-result" element={<PreviousYearResult />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -63,16 +70,28 @@ const App: React.FC = () => {
         <Route path="/villages/:villageName" element={<VillagePeople />} />
         <Route path="/users/:userId" element={<UserDetail />} />
         <Route path="/user-details" element={<UserDetailsForm />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+  <Route path="/committee-members" element={<CommitteeMembers />} />
+  <Route path="/gallery" element={<GalleryPage />} />
+  <Route path="/businesses" element={<Businesses />} />
+  <Route path="/businesses/:name" element={<BusinessUsers />} />
         <Route
-          path="/logout"
+          path="/admin-dashboard"
           element={
-            <>
-              {logout()}
-              <Navigate to="/login" replace />
-            </>
+            <RequireAdmin>
+              <AdminDashboard />
+            </RequireAdmin>
           }
         />
+        <Route
+          path="/admin-welcome"
+          element={
+            <RequireAdmin>
+              <AdminWelcome />
+              {/* <p>Welcome to the Admin Dashboard</p> */}
+            </RequireAdmin>
+          }
+        />
+  <Route path="/logout" element={<Logout />} />
       </Routes>
     </Layout>
   );

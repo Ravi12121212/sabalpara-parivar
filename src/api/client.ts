@@ -27,15 +27,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (resp) => resp,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      const msg = error.response.data?.message || error.response.statusText;
-      console.warn('[api] 401 Unauthorized for', error.config?.url, 'message:', msg);
-      // Only clear token if message explicitly indicates invalid/expired token
-      if (/expired|invalid|token/i.test(msg)) {
-        console.warn('[api] Clearing token due to invalid/expired message');
-        localStorage.removeItem('token');
-      }
-    }
+  // Do not auto-remove token on 401; let the app decide.
+  // This avoids redirect loops if a single endpoint returns 401 for non-admin.
     return Promise.reject(error);
   }
 );

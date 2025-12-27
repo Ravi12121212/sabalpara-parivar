@@ -5,12 +5,11 @@ import App from './pages/App';
 import { AuthProvider } from './hooks/AuthContext';
 import './global.css';
 
+// Remove StrictMode to avoid double-invocation of effects in dev (reduces flicker)
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>,
+  <BrowserRouter>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </BrowserRouter>,
 );

@@ -9,8 +9,7 @@ interface Member {
   memberName: string;
   age?: number | "";
   std?: string;
-  percentage?: number | "";
-  resultImage?: string;
+  
   activityType?: string;
   businessWorkType?: string;
   businessName?: string;
@@ -36,8 +35,7 @@ const emptyMember: Member = {
   memberName: "",
   age: "",
   std: "",
-  percentage: "",
-  resultImage: "",
+  
   activityType: "study",
   businessWorkType: "",
   businessName: "",
@@ -60,11 +58,7 @@ const ProfileManage: React.FC = () => {
     familyMembers: [emptyMember],
   });
   const [editing, setEditing] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<Record<number, File>>({});
-  const [uploadError, setUploadError] = useState<Record<number, string | null>>(
-    {}
-  );
-  const [uploading, setUploading] = useState<Record<number, boolean>>({});
+  // Removed result image upload state
 
   useEffect(() => {
     if (!profileData?.profile) return;
@@ -84,8 +78,7 @@ const ProfileManage: React.FC = () => {
         memberName: m.memberName || "",
         age: m.age ?? "",
         std: m.std ?? "",
-        percentage: m.percentage ?? "",
-        resultImage: m.resultImage || "",
+        
         activityType: m.activityType || "study",
         businessWorkType: m.businessWorkType || "",
         businessName: m.businessName || "",
@@ -115,42 +108,7 @@ const ProfileManage: React.FC = () => {
       ...f,
       familyMembers: f.familyMembers.filter((_, i) => i !== idx),
     }));
-    setSelectedFiles((files) => {
-      const next: Record<number, File> = {};
-      let ni = 0;
-      Object.keys(files)
-        .sort((a, b) => Number(a) - Number(b))
-        .forEach((k) => {
-          const i = Number(k);
-          if (i === idx) return;
-          next[ni++] = files[i];
-        });
-      return next;
-    });
-    setUploadError((errs) => {
-      const next: Record<number, string | null> = {};
-      let ni = 0;
-      Object.keys(errs)
-        .sort((a, b) => Number(a) - Number(b))
-        .forEach((k) => {
-          const i = Number(k);
-          if (i === idx) return;
-          next[ni++] = errs[i];
-        });
-      return next;
-    });
-    setUploading((up) => {
-      const next: Record<number, boolean> = {};
-      let ni = 0;
-      Object.keys(up)
-        .sort((a, b) => Number(a) - Number(b))
-        .forEach((k) => {
-          const i = Number(k);
-          if (i === idx) return;
-          next[ni++] = up[i];
-        });
-      return next;
-    });
+    
   };
 
   const validate = (): boolean => {
@@ -168,10 +126,8 @@ const ProfileManage: React.FC = () => {
       const list: string[] = [];
       if (!m.memberName.trim()) list.push("Member name");
       if (m.age === "" || m.age == null) list.push("Age");
-      if ((m.activityType || "study") === "study") {
+  if ((m.activityType || "study") === "study") {
         if (!m.std?.trim()) list.push("Std");
-        if (m.percentage === "" || m.percentage == null)
-          list.push("Percentage");
       } else if (m.activityType === "business") {
         if (!m.businessWorkType?.trim()) list.push("Business work type");
         if (!m.businessName?.trim()) list.push("Business name");
@@ -197,25 +153,7 @@ const ProfileManage: React.FC = () => {
     if (!validate()) return;
     setSaving(true);
     try {
-      const processedMembers = await Promise.all(
-        form.familyMembers.map(async (m, i) => {
-          const file = selectedFiles[i];
-          if (!file) return m;
-          setUploading((u) => ({ ...u, [i]: true }));
-          try {
-            const fd = new FormData();
-            fd.append("file", file);
-            const res = await api.post("/upload", fd);
-            return { ...m, resultImage: res.data.url };
-          } catch (err: any) {
-            throw new Error(
-              err.response?.data?.message || `Upload failed for member ${i + 1}`
-            );
-          } finally {
-            setUploading((u) => ({ ...u, [i]: false }));
-          }
-        })
-      );
+  const processedMembers = form.familyMembers;
       const payload = {
         village: form.village,
         name: form.name,
@@ -232,13 +170,7 @@ const ProfileManage: React.FC = () => {
             memberName: m.memberName,
             age: m.age === "" ? undefined : m.age,
             std: m.activityType === "study" ? m.std : undefined,
-            percentage:
-              m.activityType === "study"
-                ? m.percentage === ""
-                  ? undefined
-                  : m.percentage
-                : undefined,
-            resultImage: m.activityType === "study" ? m.resultImage : undefined,
+            
             activityType: m.activityType,
             businessWorkType:
               m.activityType === "business" ? m.businessWorkType : undefined,
@@ -532,105 +464,7 @@ const ProfileManage: React.FC = () => {
                     </select>
                   )}
                 </div>
-                {(m.activityType || "study") === "study" && m.resultImage && (
-                  <img
-                    src={m.resultImage}
-                    alt={m.memberName}
-                    className="member-img"
-                  />
-                )}
-                {(m.activityType || "study") === "study" && (
-                  <div className="file-picker">
-                    <button
-                      type="button"
-                      className="file-picker-button"
-                      onClick={() => {
-                        const input = document.getElementById(
-                          `pm-member-file-${idx}`
-                        ) as HTMLInputElement | null;
-                        input?.click();
-                      }}
-                    >
-                      {selectedFiles[idx] || m.resultImage
-                        ? "Change Result"
-                        : "Choose Result"}
-                    </button>
-                    <span className="file-name">
-                      {selectedFiles[idx]?.name ||
-                        (m.resultImage ? "Selected" : "No file chosen")}
-                    </span>
-                    <input
-                      id={`pm-member-file-${idx}`}
-                      className="file-hidden"
-                      type="file"
-                      accept=".jpg,.jpeg,.png"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const allowed = [
-                          "image/jpeg",
-                          "image/png",
-                          "image/jpg",
-                        ];
-                        if (!allowed.includes(file.type)) {
-                          setUploadError((er) => ({
-                            ...er,
-                            [idx]: "Only JPG/JPEG/PNG",
-                          }));
-                          return;
-                        }
-                        if (file.size > 1024 * 1024) {
-                          setUploadError((er) => ({
-                            ...er,
-                            [idx]: "File too large (1MB max)",
-                          }));
-                          return;
-                        }
-                        setUploadError((er) => ({ ...er, [idx]: null }));
-                        setSelectedFiles((f) => ({ ...f, [idx]: file }));
-                        const preview = URL.createObjectURL(file);
-                        updateMember(idx, { resultImage: preview });
-                      }}
-                      disabled={uploading[idx]}
-                    />
-                  </div>
-                )}
-                {(m.activityType || "study") === "study" && (
-                  <>
-                    {uploading[idx] && (
-                      <span className="uploading-flag">Uploading...</span>
-                    )}
-                    {uploadError[idx] && (
-                      <div className="error-text">{uploadError[idx]}</div>
-                    )}
-                    <input
-                      className={`input ${
-                        memberErrors[idx]?.includes("Percentage")
-                          ? "input-error"
-                          : ""
-                      }`}
-                      placeholder="Percentage"
-                      type="number"
-                      value={m.percentage || ""}
-                      onChange={(e) => {
-                        updateMember(idx, {
-                          percentage: e.target.value
-                            ? Number(e.target.value)
-                            : "",
-                        });
-                        setMemberErrors((me) => {
-                          const copy = { ...me };
-                          if (copy[idx])
-                            copy[idx] = copy[idx].filter(
-                              (x) => x !== "Percentage"
-                            );
-                          if (!copy[idx]?.length) delete copy[idx];
-                          return copy;
-                        });
-                      }}
-                    />
-                  </>
-                )}
+                
                 {m.activityType === "business" && (
                   <>
                     <input

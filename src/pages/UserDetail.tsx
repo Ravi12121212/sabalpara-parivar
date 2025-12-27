@@ -71,7 +71,7 @@ const UserDetail: React.FC = () => {
                     {(fm.memberName ? `Name: ${fm.memberName}` : 'Member')}
                     {fm.age ? `, Age: ${fm.age}` : ''}
                     {fm.std ? `, Std: ${fm.std}` : ''}
-                    {/* resultImage & percentage intentionally omitted */}
+                    {/* academic percentage and result image removed */}
                   </li>
                 ))}
               </ul>

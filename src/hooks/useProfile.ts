@@ -17,8 +17,7 @@ export interface ProfileData {
     memberName: string;
     age?: number;
     std?: string;
-    resultImage?: string;
-    percentage?: number;
+    
   activityType?: string;
   businessWorkType?: string;
   businessName?: string;
