@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { gallery, GalleryItemDto } from '../api/gallery';
 import { useAuth } from '../hooks/AuthContext';
 
-// const BASE_URL = "https://api.sablapraparivar.in";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://api.sablapraparivar.in";
+// const BASE_URL = "http://localhost:3000";
 
 export function fileUrl(path?: string) {
   if (!path) return "";
