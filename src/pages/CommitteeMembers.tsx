@@ -250,7 +250,7 @@ const CommitteeMembers: React.FC = () => {
               </div>
               <div>
                 <label htmlFor="contactNumber" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Contact Number</label>
-                <input id="contactNumber" type="tel" value={memberContact} onChange={(e) => setMemberContact(e.target.value)} placeholder="e.g. +8801XXXXXXXXX" style={{ width: '100%', height: 40, padding: '0 12px', borderRadius: 8, border: '1px solid #c7c7c7', background: '#fff' }} />
+                <input id="contactNumber" type="number" value={memberContact} onChange={(e) => setMemberContact(e.target.value)} placeholder="e.g. +8801XXXXXXXXX" style={{ width: '100%', height: 40, padding: '0 12px', borderRadius: 8, border: '1px solid #c7c7c7', background: '#fff' }} />
               </div>
               <div>
                 <label htmlFor="addImageFile" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Photo</label>
