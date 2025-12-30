@@ -4,8 +4,8 @@ import { api } from '../api/client';
 import { useAuth } from '../hooks/AuthContext';
 import RequireProfile from '../components/RequireProfile';
 
-const BASE_URL = "https://api.sablapraparivar.in";
-// const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "https://api.sablapraparivar.in";
+const BASE_URL = "http://localhost:3000";
 
 
 export function fileUrl(path?: string) {
@@ -265,22 +265,14 @@ const CommitteeMembers: React.FC = () => {
           </section>
         )}
 
-        <div style={{ position: 'sticky', top: 0, background: 'rgba(255, 247, 220, 0.9)', backdropFilter: 'blur(2px)', padding: '0.5rem 0.9rem', borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottom: '1px solid #f0e6c0', zIndex: 5 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr auto', gap: '0.75rem', alignItems: 'center', color: '#444', fontSize: 12 }}>
-            <div style={{ fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.6 }}>Name</div>
-            <div style={{ fontWeight: 800, textTransform: 'uppercase', letterSpacing: 0.6 }}>Post</div>
-            <div />
-          </div>
-        </div>
-
-        <section style={{ display: 'grid', gap: '0.85rem' }}>
+        <section className="committee-grid">
           {!committee || committee.members.length === 0 ? (
             <p style={{ color: '#666' }}>No members yet.</p>
           ) : (
             committee.members.map((m, idx) => (
-              <div key={idx} style={{ background: idx % 2 === 0 ? '#ffffff' : '#fcfcfc', border: '1px solid #e6e6e6', padding: '0.9rem 1rem', borderRadius: 12, display: 'grid', gridTemplateColumns: '1.2fr 1fr auto', gap: '0.75rem', alignItems: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', transition: 'transform 120ms ease, box-shadow 120ms ease' }} onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 10px rgba(0,0,0,0.08)'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-1px)'; }} onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)'; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'; }}>
+              <div key={idx} className="member-card">
                 {editingIndex === idx ? (
-                  <div style={{ gridColumn: '1 / -1', display: 'grid', gap: '0.75rem' }}>
+                  <div style={{ display: 'grid', gap: '0.75rem' }}>
                     <div className="edit-form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '0.75rem' }}>
                       <div>
                         <label htmlFor={`editMember-${idx}`} style={{ display: 'block', fontSize: 12, color: '#555', marginBottom: 4 }}>Member Name</label>
@@ -315,31 +307,22 @@ const CommitteeMembers: React.FC = () => {
                   </div>
                 ) : (
                   <>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      {(m as any).imageUrl && (
-                        <img src={fileUrl((m as any).imageUrl)} alt={m.memberName} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: '1px solid #e0e0e0' }} />
-                      )}
-                      <div>
-                        <div style={{ fontWeight: 800, fontSize: 16 }}>{m.memberName}</div>
-                        <div style={{ fontSize: 12, color: '#777' }}>+91 {m.contactNumber}</div>
+                    {isAdmin && (
+                      <div className="member-actions">
+                        <button aria-label="Edit" title="Edit" onClick={() => startEdit(idx)} className="btn" style={{ height: 36, width: 36, padding: 0, borderRadius: 8, border: '1px solid #1976d2', background: 'transparent', color: '#1976d2' }}>✏️</button>
+                        <button aria-label="Delete" title="Delete" onClick={() => onDelete(idx)} className="btn" style={{ height: 36, width: 36, padding: 0, borderRadius: 8, border: '1px solid #b00020', background: 'transparent', color: '#b00020' }}>🗑️</button>
                       </div>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ fontSize: 13, color: '#0d47a1', background: '#e3f2fd', border: '1px solid #bbdefb', borderRadius: 999, padding: '4px 10px', fontWeight: 700 }}>{m.post}</span>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-                      {isAdmin ? (
-                        <>
-                          <button aria-label="Edit" title="Edit" onClick={() => startEdit(idx)} style={{ height: 32, width: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, border: '1px solid #1976d2', background: 'transparent', color: '#1976d2', fontWeight: 700 }}>
-                            <span style={{ fontSize: 16 }}>✏️</span>
-                          </button>
-                          <button aria-label="Delete" title="Delete" onClick={() => onDelete(idx)} style={{ height: 32, width: 32, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, border: '1px solid #b00020', background: 'transparent', color: '#b00020', fontWeight: 700 }}>
-                            <span style={{ fontSize: 16 }}>🗑️</span>
-                          </button>
-                        </>
-                      ) : (
-                        <span style={{ fontSize: 12, color: '#888' }}></span>
-                      )}
+                    )}
+                    {(m as any).imageUrl && (
+                      <img src={fileUrl((m as any).imageUrl)} alt={m.memberName} className="member-avatar" />
+                    )}
+                    <div className="member-name">{m.memberName}</div>
+                    <div className="member-post">{m.post}</div>
+                    <div className="member-contact">{m.contactNumber ? `+91 ${m.contactNumber}` : ''}</div>
+                    <div className="member-social">
+                      <span style={{ opacity: 0.9 }}>●</span>
+                      <span style={{ opacity: 0.6 }}>●</span>
+                      <span style={{ opacity: 0.6 }}>●</span>
                     </div>
                   </>
                 )}

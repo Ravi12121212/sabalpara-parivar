@@ -9,7 +9,7 @@ interface Member {
   memberName: string;
   age?: number | "";
   std?: string;
-  
+
   activityType?: string;
   businessWorkType?: string;
   businessName?: string;
@@ -35,7 +35,7 @@ const emptyMember: Member = {
   memberName: "",
   age: "",
   std: "",
-  
+
   activityType: "study",
   businessWorkType: "",
   businessName: "",
@@ -78,7 +78,7 @@ const ProfileManage: React.FC = () => {
         memberName: m.memberName || "",
         age: m.age ?? "",
         std: m.std ?? "",
-        
+
         activityType: m.activityType || "study",
         businessWorkType: m.businessWorkType || "",
         businessName: m.businessName || "",
@@ -108,7 +108,7 @@ const ProfileManage: React.FC = () => {
       ...f,
       familyMembers: f.familyMembers.filter((_, i) => i !== idx),
     }));
-    
+
   };
 
   const validate = (): boolean => {
@@ -126,7 +126,7 @@ const ProfileManage: React.FC = () => {
       const list: string[] = [];
       if (!m.memberName.trim()) list.push("Member name");
       if (m.age === "" || m.age == null) list.push("Age");
-  if ((m.activityType || "study") === "study") {
+      if ((m.activityType || "study") === "study") {
         if (!m.std?.trim()) list.push("Std");
       } else if (m.activityType === "business") {
         if (!m.businessWorkType?.trim()) list.push("Business work type");
@@ -153,7 +153,7 @@ const ProfileManage: React.FC = () => {
     if (!validate()) return;
     setSaving(true);
     try {
-  const processedMembers = form.familyMembers;
+      const processedMembers = form.familyMembers;
       const payload = {
         village: form.village,
         name: form.name,
@@ -170,7 +170,7 @@ const ProfileManage: React.FC = () => {
             memberName: m.memberName,
             age: m.age === "" ? undefined : m.age,
             std: m.activityType === "study" ? m.std : undefined,
-            
+
             activityType: m.activityType,
             businessWorkType:
               m.activityType === "business" ? m.businessWorkType : undefined,
@@ -214,55 +214,58 @@ const ProfileManage: React.FC = () => {
         </div>
       )}
       {!editing && (
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}
-        >
-          <div>
-            <strong>Name:</strong> {form.name || "—"}
+        <div className="profile-overview">
+          <div className="profile-card">
+            <div className="profile-avatar" aria-hidden>
+              {form.name ? form.name.split(" ").map(s => s[0]).slice(0, 2).join("") : "—"}
+            </div>
+            <div className="profile-name">{form.name || '—'}</div>
+            <div className="profile-sub">{form.businessDetails || form.businessType || 'Member'}</div>
+
+            <div className="profile-stats">
+              <div className="stat-row"><div className="stat-label">Age</div><div className="stat-label">{form.age || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Village:</div><div className="stat-label">{form.village || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">City:</div><div className="stat-label"> {form.cityName || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Current Address:</div> <div className="stat-label">{form.currentAddress || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Phone:</div><div className="stat-label"> {profileData?.user?.phone || form.phoneNumber || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Email:</div><div className="stat-label"> {profileData?.user?.email || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Business Type:</div><div className="stat-label"> {form.businessType || '—'}</div></div>
+            </div>
           </div>
-          <div>
-            <strong>Age:</strong>{" "}
-            {form.age !== "" && form.age != null ? form.age : "—"}
+
+          <div className="profile-details">
+
+            <h4 style={{ marginTop: 12 }}>Family Members</h4>
+            <div className="family-grid">
+              {form.familyMembers && form.familyMembers.length ? form.familyMembers.map((m, i) => (
+                <div key={i} className="family-card">
+                  <div className="family-top">
+                    <div className="family-avatar">{m.memberName ? m.memberName.split(' ').map(s => s[0]).slice(0, 2).join('') : '—'}</div>
+                    <div className="family-info">
+                      <div className="family-name">{m.memberName || 'Member'}</div>
+                      <div className="family-meta">{m.relation || ''} {m.age ? `· ${m.age} yrs` : ''}</div>
+                    </div>
+                  </div>
+                  <div className="family-bio">
+                    <div style={{marginBottom:6}}>{m.businessDescription || m.std ? (m.businessDescription || m.std) : '—'}</div>
+                    <div className="family-meta-row">
+                      {m.memberPhone && <div className="meta-item">📞 {m.memberPhone}</div>}
+                      {m.activityType && <div className="meta-item">🔎 {m.activityType}</div>}
+                      {m.businessName && <div className="meta-item">🏷️ {m.businessName}</div>}
+                      {m.businessWorkType && <div className="meta-item">💼 {m.businessWorkType}</div>}
+                      {m.relation && <div className="meta-item">🧭 {m.relation}</div>}
+                      {m.age ? <div className="meta-item">🎂 {m.age} yrs</div> : null}
+                      {((m as any).createdAt) ? <div className="meta-item">⏱ {new Date((m as any).createdAt).toLocaleDateString()}</div> : null}
+                    </div>
+                  </div>
+                </div>
+              )) : <div>No family members added.</div>}
+            </div>
+
+            <div style={{ marginTop: 12 }}>
+              <button className="btn btn-primary" onClick={() => setEditing(true)}>Edit Profile</button>
+            </div>
           </div>
-          <div>
-            <strong>Village:</strong> {form.village || "—"}
-          </div>
-          <div>
-            <strong>Current Address:</strong> {form.currentAddress || "—"}
-          </div>
-          <div>
-            <strong>Business Details:</strong> {form.businessDetails || "—"}
-          </div>
-          <div>
-            <strong>City:</strong> {form.cityName || "—"}
-          </div>
-          <div>
-            <strong>Business Type:</strong> {form.businessType || "—"}
-          </div>
-          <div>
-            <strong>Family Members:</strong>
-            <ul style={{ margin: 0, paddingLeft: "1rem" }}>
-              {form.familyMembers.map((fm, i) => (
-                <li key={i}>
-                  {fm.memberName || "Member"}
-                  {fm.age ? `, Age: ${fm.age}` : ""}
-                  {(fm.activityType || "study") === "study" && fm.std
-                    ? `, Std: ${fm.std}`
-                    : ""}
-                  {fm.activityType === "business" && fm.businessName
-                    ? `, Business: ${fm.businessName}`
-                    : ""}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <button
-            className="btn btn-primary"
-            type="button"
-            onClick={() => setEditing(true)}
-          >
-            Edit Profile
-          </button>
         </div>
       )}
       {editing && (
@@ -365,11 +368,10 @@ const ProfileManage: React.FC = () => {
               <div key={idx} className="member-card">
                 <h4>Member {idx + 1}</h4>
                 <input
-                  className={`input ${
-                    memberErrors[idx]?.includes("Member name")
-                      ? "input-error"
-                      : ""
-                  }`}
+                  className={`input ${memberErrors[idx]?.includes("Member name")
+                    ? "input-error"
+                    : ""
+                    }`}
                   placeholder="Member Name"
                   value={m.memberName}
                   onChange={(e) => {
@@ -398,9 +400,8 @@ const ProfileManage: React.FC = () => {
                 </select>
                 <div className="inline-actions">
                   <input
-                    className={`input ${
-                      memberErrors[idx]?.includes("Age") ? "input-error" : ""
-                    }`}
+                    className={`input ${memberErrors[idx]?.includes("Age") ? "input-error" : ""
+                      }`}
                     placeholder="Age"
                     type="number"
                     value={m.age || ""}
@@ -419,9 +420,8 @@ const ProfileManage: React.FC = () => {
                   />
                   {(m.activityType || "study") === "study" && (
                     <input
-                      className={`input ${
-                        memberErrors[idx]?.includes("Std") ? "input-error" : ""
-                      }`}
+                      className={`input ${memberErrors[idx]?.includes("Std") ? "input-error" : ""
+                        }`}
                       placeholder="Std"
                       value={m.std || ""}
                       onChange={(e) => {
@@ -438,11 +438,10 @@ const ProfileManage: React.FC = () => {
                   )}
                   {m.activityType === "business" && (
                     <select
-                      className={`input ${
-                        memberErrors[idx]?.includes("Business work type")
-                          ? "input-error"
-                          : ""
-                      }`}
+                      className={`input ${memberErrors[idx]?.includes("Business work type")
+                        ? "input-error"
+                        : ""
+                        }`}
                       value={m.businessWorkType || ""}
                       onChange={(e) => {
                         updateMember(idx, { businessWorkType: e.target.value });
@@ -464,15 +463,14 @@ const ProfileManage: React.FC = () => {
                     </select>
                   )}
                 </div>
-                
+
                 {m.activityType === "business" && (
                   <>
                     <input
-                      className={`input ${
-                        memberErrors[idx]?.includes("Business name")
-                          ? "input-error"
-                          : ""
-                      }`}
+                      className={`input ${memberErrors[idx]?.includes("Business name")
+                        ? "input-error"
+                        : ""
+                        }`}
                       placeholder="Business / Employer Name"
                       value={m.businessName || ""}
                       onChange={(e) => {
@@ -489,11 +487,10 @@ const ProfileManage: React.FC = () => {
                       }}
                     />
                     <input
-                      className={`input ${
-                        memberErrors[idx]?.includes("Business description")
-                          ? "input-error"
-                          : ""
-                      }`}
+                      className={`input ${memberErrors[idx]?.includes("Business description")
+                        ? "input-error"
+                        : ""
+                        }`}
                       placeholder="Business Description / Role"
                       value={m.businessDescription || ""}
                       onChange={(e) => {
@@ -516,11 +513,10 @@ const ProfileManage: React.FC = () => {
                 {m.activityType === "none" && (
                   <>
                     <select
-                      className={`input ${
-                        memberErrors[idx]?.includes("None category")
-                          ? "input-error"
-                          : ""
-                      }`}
+                      className={`input ${memberErrors[idx]?.includes("None category")
+                        ? "input-error"
+                        : ""
+                        }`}
                       value={m.noneCategory || ""}
                       onChange={(e) => {
                         updateMember(idx, { noneCategory: e.target.value });

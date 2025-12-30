@@ -40,14 +40,17 @@ const VillageList: React.FC = () => {
         {loading && <p style={{ fontSize:'0.85rem' }}>Loading...</p>}
         {error && <div className="field-error" style={{ marginBottom:'0.5rem' }}>{error}</div>}
         {!loading && !error && filtered.length === 0 && <p style={{ fontSize:'0.8rem' }}>No villages match.</p>}
-        <div style={{ maxHeight: '60vh', overflowY:'auto', borderRadius:12, background:'#fff', padding:'0.5rem', boxShadow:'var(--shadow-soft)' }}>
-          {filtered.map(v => (
-            <div key={v.id} style={{ padding:'0.6rem 0.7rem', borderBottom:'1px solid var(--color-border)' }}>
-              <Link to={`/villages/${encodeURIComponent(v.name)}`} style={{ fontWeight:600, textDecoration:'none', color:'var(--color-text)' }}>
-                {v.name}
-              </Link>
-            </div>
-          ))}
+        <div style={{ maxHeight: '60vh', overflowY:'auto' }}>
+          <div className="village-grid" style={{ borderRadius:12, background:'#fff', padding:'0.5rem', boxShadow:'var(--shadow-soft)' }}>
+            {filtered.map(v => (
+              <div key={v.id} className="village-card">
+                <Link to={`/villages/${encodeURIComponent(v.name)}`} className="village-link">
+                  <div className="village-name">{v.name}</div>
+                  <div className="village-meta">{v.population ? `Population: ${v.population}` : ''}{v.district ? (v.population ? ' · ' : '') + v.district : ''}</div>
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </AuthCard>
