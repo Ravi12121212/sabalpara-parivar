@@ -16,6 +16,9 @@ const GalleryPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  const [titles, setTitles] = useState<string[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [files, setFiles] = useState<File[]>([]);
   const [title, setTitle] = useState('');
   const [saving, setSaving] = useState(false);
@@ -29,8 +32,15 @@ const GalleryPage: React.FC = () => {
       setLoading(true);
       const list = await gallery.list(q);
       setItems(list);
+      // derive unique non-empty titles from loaded items
+      const uniq = Array.from(new Set((list || []).map(i => (i.title || '').toString().trim()).filter(Boolean)));
+      setTitles(uniq);
+      // default selected title to first available if not already selected
+      if (!selectedTitle && uniq.length) setSelectedTitle(uniq[0]);
+      setError(null);
     } catch (e: any) {
-      setError(e?.message || 'Failed to load');
+      const msg = e?.response?.data?.message || e?.message || 'Failed to load';
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -46,6 +56,17 @@ const GalleryPage: React.FC = () => {
     return () => clearTimeout(id);
   }, [search]);
 
+  // close dropdown on outside click
+  const searchRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => {
+      if (!searchRef.current) return;
+      if (!searchRef.current.contains(e.target as Node)) setShowDropdown(false);
+    };
+    document.addEventListener('mousedown', onDoc);
+    return () => document.removeEventListener('mousedown', onDoc);
+  }, []);
+
   const onPick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fl = Array.from(e.target.files || []);
     if (!fl.length) return;
@@ -59,6 +80,7 @@ const GalleryPage: React.FC = () => {
   const onAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!files.length) { setError('Choose images'); return; }
+    if (!title.trim()) { setError('Title is required'); return; }
     setSaving(true);
     try {
       const urls = await gallery.uploadMany(files);
@@ -67,8 +89,10 @@ const GalleryPage: React.FC = () => {
       setFiles([]);
       setTitle('');
       (document.getElementById('gallery-file') as HTMLInputElement | null)?.value && ((document.getElementById('gallery-file') as HTMLInputElement).value = '');
+        setError(null);
     } catch (e: any) {
-      setError(e?.message || 'Failed to add');
+      const msg = e?.response?.data?.message || e?.message || 'Failed to add';
+      setError(msg);
     } finally {
       setSaving(false);
     }
@@ -80,8 +104,10 @@ const GalleryPage: React.FC = () => {
     try {
       await gallery.remove(id);
       setItems(items.filter(i => (i.id || i._id) !== id));
+        setError(null);
     } catch (e: any) {
-      setError(e?.message || 'Failed to delete');
+      const msg = e?.response?.data?.message || e?.message || 'Failed to delete';
+      setError(msg);
     }
   };
 
@@ -100,8 +126,10 @@ const GalleryPage: React.FC = () => {
         return;
       }
       setViewerIndex((prev) => Math.min(prev, nextItems.length - 1));
+        setError(null);
     } catch (e: any) {
-      setError(e?.message || 'Failed to delete');
+      const msg = e?.response?.data?.message || e?.message || 'Failed to delete';
+      setError(msg);
     }
   };
 
@@ -130,13 +158,28 @@ const GalleryPage: React.FC = () => {
       {error && <div style={{ background:'#fdecea', border:'1px solid #f5c2c0', padding: '0.5rem 0.75rem', color:'#b23b34', borderRadius:8, marginBottom:'0.75rem' }}>{error}</div>}
 
       {/* Search */}
-      <div style={{ marginBottom: '0.75rem' }}>
+      <div style={{ marginBottom: '0.75rem' }} ref={searchRef}>
         <input
           value={search}
-          onChange={(e)=>setSearch(e.target.value)}
+          onChange={(e)=>{ setSearch(e.target.value); setShowDropdown(true); }}
+          onFocus={() => setShowDropdown(true)}
           placeholder="Search by title…"
           style={{ width:'100%', height:40, border:'1px solid #c7c7c7', borderRadius:8, padding:'0 12px' }}
         />
+        {showDropdown && titles.length > 0 && (
+          <div style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', zIndex: 30, left: 0, right: 0, background: 'white', border: '1px solid #eee', borderRadius: 8, marginTop: 8, boxShadow: '0 6px 18px rgba(2,6,23,0.08)', maxHeight: 220, overflow: 'auto' }}>
+              {titles.map((t) => (
+                <div key={t} onClick={() => {
+                  setSelectedTitle(t);
+                  setSearch(t);
+                  setShowDropdown(false);
+                  load(t);
+                }} style={{ padding: '8px 12px', cursor: 'pointer', borderBottom: '1px solid #f6f6f6' }}>{t}</div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {isAdmin && (
@@ -144,7 +187,7 @@ const GalleryPage: React.FC = () => {
           <h3 style={{ margin: 0, marginBottom: '0.75rem', fontSize: 18, fontWeight: 600 }}>Add Images</h3>
           <form onSubmit={onAdd} className="add-form-grid" style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: '1.1fr 0.9fr auto', alignItems: 'end' }}>
             <div>
-              <label htmlFor="gallery-title" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Title (optional)</label>
+              <label htmlFor="gallery-title" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Title <span style={{ color:'#b23b34' }}>(required)</span></label>
               <input id="gallery-title" value={title} onChange={(e)=>setTitle(e.target.value)} placeholder="e.g. Event 2025" style={{ width: '100%', height: 40, padding: '0 12px', borderRadius: 8, border: '1px solid #c7c7c7', background: '#fff' }} />
             </div>
             <div>
