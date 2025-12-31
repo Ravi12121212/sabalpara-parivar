@@ -57,6 +57,13 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose }) => {
               ANC Committee Members
             </Link>
             <Link
+              to="/notifications"
+              onClick={onClose}
+              className={isActive("/notifications") ? "active" : ""}
+            >
+              Notifications
+            </Link>
+            <Link
               to="/gallery"
               onClick={onClose}
               className={isActive("/gallery") ? "active" : ""}

@@ -25,6 +25,7 @@ import CommitteeMembers from "./CommitteeMembers";
 import GalleryPage from "./Gallery";
 import Businesses from "./Businesses";
 import BusinessUsers from "./BusinessUsers";
+import Notifications from "./Notifications";
 import Logout from "./Logout";
 import RequireAdmin from "../components/RequireAdmin";
 
@@ -74,6 +75,7 @@ const App: React.FC = () => {
   <Route path="/gallery" element={<GalleryPage />} />
   <Route path="/businesses" element={<Businesses />} />
   <Route path="/businesses/:name" element={<BusinessUsers />} />
+      <Route path="/notifications" element={<Notifications />} />
         <Route
           path="/admin-dashboard"
           element={

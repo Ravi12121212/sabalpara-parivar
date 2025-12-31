@@ -2,8 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { gallery, GalleryItemDto } from '../api/gallery';
 import { useAuth } from '../hooks/AuthContext';
 
-// const BASE_URL = "https://api.sablapraparivar.in";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://api.sablapraparivar.in";
+// const BASE_URL = "http://localhost:3000";
 
 export function fileUrl(path?: string) {
   if (!path) return "";
@@ -149,7 +149,11 @@ const GalleryPage: React.FC = () => {
             </div>
             <div>
               <label htmlFor="gallery-file" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Images</label>
-              <input id="gallery-file" type="file" accept=".jpg,.jpeg,.png,.webp" multiple onChange={onPick} />
+              <div className="file-picker">
+                <input id="gallery-file" type="file" accept=".jpg,.jpeg,.png,.webp" multiple onChange={onPick} style={{ position:'absolute', width:1, height:1, padding:0, margin:-1, overflow:'hidden', clip:'rect(0 0 0 0)', border:0 }} />
+                <label htmlFor="gallery-file" className="file-picker-button">Select images</label>
+                <div className={`file-picker-filename ${files.length ? '' : 'muted'}`}>{files.length ? `${files.length} file(s)` : 'No file chosen'}</div>
+              </div>
             </div>
             <button type="submit" disabled={saving} className="add-form-submit" style={{ height: 40, padding: '0 16px', borderRadius: 8, border: '1px solid #1976d2', background: saving ? '#90caf9' : '#2196f3', color: 'white', fontWeight: 700 }}>
               {saving ? 'Saving…' : `Add ${files.length ? `(${files.length})` : ''}`}

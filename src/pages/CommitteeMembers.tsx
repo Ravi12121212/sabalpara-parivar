@@ -4,8 +4,8 @@ import { api } from '../api/client';
 import { useAuth } from '../hooks/AuthContext';
 import RequireProfile from '../components/RequireProfile';
 
-// const BASE_URL = "https://api.sablapraparivar.in";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://api.sablapraparivar.in";
+// const BASE_URL = "http://localhost:3000";
 
 
 export function fileUrl(path?: string) {
