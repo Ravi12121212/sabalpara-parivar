@@ -12,6 +12,8 @@ interface UserDetailData {
   totalFamilyMembers?: number;
   currentAddress?: string;
   businessDetails?: string;
+  businessType?: string;
+  age?: number | string;
   createdAt?: string;
   updatedAt?: string; // profile updatedAt
   familyMembers?: any[];
@@ -33,11 +35,13 @@ const UserDetail: React.FC = () => {
           id: u.id || u._id || userId,
           name: u.profile?.name || u.fullName || 'Unnamed',
           email: u.email,
-          phone: u.phone,
+          phone: u.profile?.phone || u.phone,
           village: u.profile?.village || u.village,
           totalFamilyMembers: u.profile?.totalFamilyMembers,
-            currentAddress: u.profile?.currentAddress,
+          currentAddress: u.profile?.currentAddress,
           businessDetails: u.profile?.businessDetails,
+          businessType: u.profile?.businessType || u.businessType,
+          age: u.profile?.age ?? u.age ?? undefined,
           createdAt: u.createdAt,
           updatedAt: u.profile?.updatedAt,
           familyMembers: u.familyMembers,
@@ -53,30 +57,49 @@ const UserDetail: React.FC = () => {
       {loading && <p style={{ fontSize:'0.85rem' }}>Loading...</p>}
       {error && <div className="field-error" style={{ marginBottom:'0.5rem' }}>{error}</div>}
       {!loading && !error && data && (
-        <div style={{ display:'flex', flexDirection:'column', gap:'0.4rem' }}>
-          <div><strong>ID:</strong> {data.id}</div>
-          {data.email && <div><strong>Email:</strong> {data.email}</div>}
-          {data.phone && <div><strong>Phone:</strong> {data.phone}</div>}
-          {data.village && <div><strong>Village:</strong> {data.village}</div>}
-          {data.totalFamilyMembers != null && <div><strong>Total Family Members:</strong> {data.totalFamilyMembers}</div>}
-          {data.currentAddress && <div><strong>Current Address:</strong> {data.currentAddress}</div>}
-          {data.businessDetails && <div><strong>Business Details:</strong> {data.businessDetails}</div>}
-          
-          {Array.isArray(data.familyMembers) && (
-            <div>
-              <strong>Family Members:</strong>
-              <ul style={{ margin:0, paddingLeft:'1.1rem' }}>
-                {data.familyMembers.map((fm: any, i: number) => (
-                  <li key={i}>
-                    {(fm.memberName ? `Name: ${fm.memberName}` : 'Member')}
-                    {fm.age ? `, Age: ${fm.age}` : ''}
-                    {fm.std ? `, Std: ${fm.std}` : ''}
-                    {/* academic percentage and result image removed */}
-                  </li>
-                ))}
-              </ul>
+        <div className="profile-overview">
+          <div className="profile-card">
+            <div className="profile-avatar" aria-hidden>{data.name ? data.name.split(' ').map(s => s[0]).slice(0,2).join('') : '—'}</div>
+            <div className="profile-name">{data.name}</div>
+            <div className="profile-sub">{data.businessDetails || data.businessType || 'Member'}</div>
+
+            <div className="profile-stats">
+              <div className="stat-row"><div className="stat-label">Age</div><div className="stat-label">{data.age || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Village:</div><div className="stat-label">{data.village || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Current Address:</div><div className="stat-label">{data.currentAddress || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Phone:</div><div className="stat-label">{data.phone || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Email:</div><div className="stat-label">{data.email || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">Business Type:</div><div className="stat-label">{data.businessType || '—'}</div></div>
             </div>
-          )}
+          </div>
+
+          <div className="profile-details">
+            <h4 style={{ marginTop: 0 }}>Family Members</h4>
+            <div className="family-grid">
+              {Array.isArray(data.familyMembers) && data.familyMembers.length ? data.familyMembers.map((m: any, i: number) => (
+                <div key={i} className="family-card">
+                  <div className="family-top">
+                    <div className="family-avatar">{m.memberName ? (m.memberName.split(' ').map((s: string) => s[0]).slice(0,2).join('')) : '—'}</div>
+                    <div className="family-info">
+                      <div className="family-name">{m.memberName || 'Member'}</div>
+                      <div className="family-meta">{m.relation || ''}{m.age ? ` · ${m.age} yrs` : ''}</div>
+                    </div>
+                  </div>
+                  <div className="family-bio">
+                    <div style={{ marginBottom: 6 }}>{m.businessDescription || m.std ? (m.businessDescription || m.std) : '—'}</div>
+                    <div className="family-meta-row">
+                      {m.memberPhone && <div className="meta-item">📞 {m.memberPhone}</div>}
+                      {m.activityType && <div className="meta-item">🔎 {m.activityType}</div>}
+                      {m.businessName && <div className="meta-item">🏷️ {m.businessName}</div>}
+                      {m.businessWorkType && <div className="meta-item">💼 {m.businessWorkType}</div>}
+                      {m.relation && <div className="meta-item">🧭 {m.relation}</div>}
+                      {m.age ? <div className="meta-item">🎂 {m.age} yrs</div> : null}
+                    </div>
+                  </div>
+                </div>
+              )) : <div>No family members added.</div>}
+            </div>
+          </div>
         </div>
       )}
     </AuthCard>

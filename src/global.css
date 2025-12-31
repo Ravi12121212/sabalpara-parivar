@@ -1226,23 +1226,18 @@ a:hover {
 
 .profile-overview {
     display: grid;
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 1fr;
     gap: 1rem;
-}
-
-@media (max-width: 860px) {
-    .profile-overview {
-        grid-template-columns: 1fr;
-    }
 }
 
 .profile-card {
     background: linear-gradient(180deg, #0ea5ff 0%, #60a5fa 100%);
     color: white;
-    border-radius: 14px;
-    padding: 18px;
+    border-radius: 16px;
+    padding: 22px 20px;
     text-align: center;
-    box-shadow: 0 20px 40px rgba(2, 6, 23, 0.12);
+    box-shadow: 0 24px 48px rgba(2, 6, 23, 0.12);
+    margin-bottom: 12px;
 }
 
 .profile-avatar {
