@@ -46,13 +46,13 @@ const InvitationPage: React.FC = () => {
         >
           Open location
         </a>
-        {/* <a
+        <a
           href="/signup"
           className="btn btn-primary"
           style={{ textDecoration: 'none' }}
         >
           Sign Up
-        </a> */}
+        </a>
         <a
           href="/Sabalpara-Parivar.apk"
           download
