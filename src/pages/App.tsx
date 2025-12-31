@@ -75,11 +75,11 @@ const App: React.FC = () => {
         <Route path="/villages/:villageName" element={<VillagePeople />} />
         <Route path="/users/:userId" element={<UserDetail />} />
         <Route path="/user-details" element={<UserDetailsForm />} />
-  <Route path="/committee-members" element={<CommitteeMembers />} />
-  <Route path="/gallery" element={<GalleryPage />} />
-  <Route path="/businesses" element={<Businesses />} />
-  <Route path="/businesses/:name" element={<BusinessUsers />} />
-      <Route path="/notifications" element={<Notifications />} />
+        <Route path="/committee-members" element={<CommitteeMembers />} />
+        <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/businesses" element={<Businesses />} />
+        <Route path="/businesses/:name" element={<BusinessUsers />} />
+        <Route path="/notifications" element={<Notifications />} />
         <Route
           path="/admin-dashboard"
           element={
@@ -97,7 +97,7 @@ const App: React.FC = () => {
             </RequireAdmin>
           }
         />
-  <Route path="/logout" element={<Logout />} />
+        <Route path="/logout" element={<Logout />} />
       </Routes>
     </Layout>
   );

@@ -54,12 +54,20 @@ const InvitationPage: React.FC = () => {
           Sign Up
         </a> */}
         <a
+          href="/Sabalpara-Parivar.apk"
+          download
+          className="btn btn-primary"
+          style={{ textDecoration: 'none' }}
+        >
+          Download App APK
+        </a>
+        {/* <a
           href="/previous-result"
           className="btn btn-ghost"
           style={{ textDecoration: 'none' }}
         >
           ગત વર્ષનું પરિણામ
-        </a>
+        </a> */}
       </div>
     </div>
   );
