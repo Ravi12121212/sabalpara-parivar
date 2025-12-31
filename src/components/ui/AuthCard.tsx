@@ -19,13 +19,9 @@ export const AuthCard: React.FC<AuthCardProps> = ({
     >
       {backTo && <Link to={backTo} className="back-btn" aria-label="Back" />}
       {/* <div className="brand-bird" aria-hidden="true">🐦</div> */}
-      <div style={{ textAlign: "center" , display: 'flex', justifyContent: 'center' }}>
+      <div style={{ textAlign: "center", display: 'flex', justifyContent: 'center' }}>
 
-      <img
-        src={"../../logo.png"}
-        alt="Invitation"
-        style={{ maxWidth: "40%", height: "auto" }}
-      />
+
       </div>
       <h1 className="auth-title">{title}</h1>
       {subtitle && <p className="auth-subtitle">{subtitle}</p>}

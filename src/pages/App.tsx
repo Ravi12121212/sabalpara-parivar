@@ -54,6 +54,10 @@ const App: React.FC = () => {
     "/forgot-password",
     "/reset-password",
   ].includes(location.pathname);
+  // If initialization complete and there's no token, redirect to login for non-auth routes
+  if (initialized && !token && !isAuthRoute) {
+    return <Navigate to="/login" replace />;
+  }
   const Layout = isAuthRoute ? AuthLayout : MainLayout;
   return (
     <Layout>
