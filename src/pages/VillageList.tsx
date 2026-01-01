@@ -23,7 +23,7 @@ const VillageList: React.FC = () => {
           }
           setVillages(raw);
       })
-      .catch(err => setError(err.response?.data?.message || 'Failed to load villages'))
+      .catch(err => setError(err.response?.data?.message || 'ગામડાં લોડ કરવામાં નિષ્ફળ ગયા'))
       .finally(()=> setLoading(false));
   }, []);
 
@@ -34,19 +34,19 @@ const VillageList: React.FC = () => {
   }, [filter, villages]);
 
   return (
-    <AuthCard title="Villages" subtitle="Browse the list" backTo="/profile-manage">
+    <AuthCard title="ગામડાં" subtitle="બધી યાદીઓ જુઓ" backTo="/profile-manage">
       <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
-        <TextInput placeholder="Search villages..." value={filter} onChange={e=>setFilter(e.target.value)} />
-        {loading && <p style={{ fontSize:'0.85rem' }}>Loading...</p>}
+        <TextInput placeholder="ગામડાઓ શોધો..." value={filter} onChange={e=>setFilter(e.target.value)} />
+        {loading && <p style={{ fontSize:'0.85rem' }}>લોડ કરી રહ્યું છે...</p>}
         {error && <div className="field-error" style={{ marginBottom:'0.5rem' }}>{error}</div>}
-        {!loading && !error && filtered.length === 0 && <p style={{ fontSize:'0.8rem' }}>No villages match.</p>}
+        {!loading && !error && filtered.length === 0 && <p style={{ fontSize:'0.8rem' }}>કોઈ ગામડાં મેળ ખાતા નથી.</p>}
         <div style={{ maxHeight: '60vh', overflowY:'auto' }}>
           <div className="village-grid" style={{ borderRadius:12, background:'#fff', padding:'0.5rem', boxShadow:'var(--shadow-soft)' }}>
             {filtered.map(v => (
               <div key={v.id} className="village-card">
                 <Link to={`/villages/${encodeURIComponent(v.name)}`} className="village-link">
                   <div className="village-name">{v.name}</div>
-                  <div className="village-meta">{v.population ? `Population: ${v.population}` : ''}{v.district ? (v.population ? ' · ' : '') + v.district : ''}</div>
+                  <div className="village-meta">{v.population ? `વસ્તી: ${v.population}` : ''}{v.district ? (v.population ? ' · ' : '') + v.district : ''}</div>
                 </Link>
               </div>
             ))}

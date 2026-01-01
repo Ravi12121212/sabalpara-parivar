@@ -39,7 +39,7 @@ const GalleryPage: React.FC = () => {
       if (!selectedTitle && uniq.length) setSelectedTitle(uniq[0]);
       setError(null);
     } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || 'Failed to load';
+      const msg = e?.response?.data?.message || e?.message || 'લોડ કરવામાં નિષ્ફળ થયાં';
       setError(msg);
     } finally {
       setLoading(false);
@@ -72,7 +72,7 @@ const GalleryPage: React.FC = () => {
       canvas.height = img.naturalHeight;
 
       const ctx = canvas.getContext('2d');
-      if (!ctx) throw new Error('Canvas not supported');
+      if (!ctx) throw new Error('કેનવાસ સપોર્ટેડ નથી');
 
       // draw image
       ctx.drawImage(img, 0, 0);
@@ -95,7 +95,7 @@ const GalleryPage: React.FC = () => {
         0.95 // quality (0–1)
       );
     } catch (err) {
-      setError('Failed to download image');
+      setError('છબી ડાઉનલોડ કરવામાં નિષ્ફળ થયાં');
     }
   };
 
@@ -134,8 +134,8 @@ const GalleryPage: React.FC = () => {
 
   const onAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!files.length) { setError('Choose images'); return; }
-    if (!title.trim()) { setError('Title is required'); return; }
+    if (!files.length) { setError('છબીઓ પસંદ કરો'); return; }
+    if (!title.trim()) { setError('શીર્ષક જરૂરી છે'); return; }
     setSaving(true);
     try {
       const urls = await gallery.uploadMany(files);
@@ -146,31 +146,20 @@ const GalleryPage: React.FC = () => {
       (document.getElementById('gallery-file') as HTMLInputElement | null)?.value && ((document.getElementById('gallery-file') as HTMLInputElement).value = '');
       setError(null);
     } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || 'Failed to add';
+      const msg = e?.response?.data?.message || e?.message || 'ઉમેરવામાં નિષ્ફળ થયાં';
       setError(msg);
     } finally {
       setSaving(false);
     }
   };
 
-  const onDelete = async (id: string) => {
-    const ok = confirm('Delete this image?');
-    if (!ok) return;
-    try {
-      await gallery.remove(id);
-      setItems(items.filter(i => (i.id || i._id) !== id));
-      setError(null);
-    } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || 'Failed to delete';
-      setError(msg);
-    }
-  };
+
 
   const deleteCurrent = async () => {
     const cur = items[viewerIndex];
     if (!cur) return;
     const id = (cur.id || cur._id) as string;
-    const ok = confirm('Delete this image?');
+    const ok = confirm('આ છબી કાઢી નાખીએ?');
     if (!ok) return;
     try {
       await gallery.remove(id);
@@ -183,7 +172,7 @@ const GalleryPage: React.FC = () => {
       setViewerIndex((prev) => Math.min(prev, nextItems.length - 1));
       setError(null);
     } catch (e: any) {
-      const msg = e?.response?.data?.message || e?.message || 'Failed to delete';
+      const msg = e?.response?.data?.message || e?.message || 'કાઢી નાખવામાં નિષ્ફળ થયાં';
       setError(msg);
     }
   };
@@ -218,7 +207,7 @@ const GalleryPage: React.FC = () => {
           value={search}
           onChange={(e) => { setSearch(e.target.value); setShowDropdown(true); }}
           onFocus={() => setShowDropdown(true)}
-          placeholder="Search by title…"
+          placeholder="શીર્ષક દ્વારા શોધો..."
           style={{ width: '100%', height: 40, border: '1px solid #c7c7c7', borderRadius: 8, padding: '0 12px' }}
         />
         {showDropdown && titles.length > 0 && (
@@ -239,22 +228,22 @@ const GalleryPage: React.FC = () => {
 
       {isAdmin && (
         <section style={{ background: '#fffef5', border: '1px solid #ffe08a', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', borderRadius: 14, padding: '1.25rem', marginBottom: '1.25rem' }}>
-          <h3 style={{ margin: 0, marginBottom: '0.75rem', fontSize: 18, fontWeight: 600 }}>Add Images</h3>
+          <h3 style={{ margin: 0, marginBottom: '0.75rem', fontSize: 18, fontWeight: 600 }}>છબીઓ ઉમેરો</h3>
           <form onSubmit={onAdd} className="add-form-grid" style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: '1.1fr 0.9fr auto', alignItems: 'end' }}>
             <div>
-              <label htmlFor="gallery-title" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Title <span style={{ color: '#b23b34' }}>(required)</span></label>
-              <input id="gallery-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Event 2025" style={{ width: '100%', height: 40, padding: '0 12px', borderRadius: 8, border: '1px solid #c7c7c7', background: '#fff' }} />
+              <label htmlFor="gallery-title" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>શીર્ષક <span style={{ color: '#b23b34' }}>(જરૂરી)</span></label>
+              <input id="gallery-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="દા.ત. ઘટના 2025" style={{ width: '100%', height: 40, padding: '0 12px', borderRadius: 8, border: '1px solid #c7c7c7', background: '#fff' }} />
             </div>
             <div>
-              <label htmlFor="gallery-file" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Images</label>
+              <label htmlFor="gallery-file" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>છબીઓ</label>
               <div className="file-picker">
                 <input id="gallery-file" type="file" accept=".jpg,.jpeg,.png,.webp" multiple onChange={onPick} style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0 0 0 0)', border: 0 }} />
-                <label htmlFor="gallery-file" className="file-picker-button">Select images</label>
-                <div className={`file-picker-filename ${files.length ? '' : 'muted'}`}>{files.length ? `${files.length} file(s)` : 'No file chosen'}</div>
+                <label htmlFor="gallery-file" className="file-picker-button">છબીઓ પસંદ કરો</label>
+                <div className={`file-picker-filename ${files.length ? '' : 'muted'}`}>{files.length ? `${files.length} file(s)` : 'કોઈ ફાઇલ પસંદ કરેલી નથી'}</div>
               </div>
             </div>
             <button type="submit" disabled={saving} className="add-form-submit" style={{ height: 40, padding: '0 16px', borderRadius: 8, border: '1px solid #1976d2', background: saving ? '#90caf9' : '#2196f3', color: 'white', fontWeight: 700 }}>
-              {saving ? 'Saving…' : `Add ${files.length ? `(${files.length})` : ''}`}
+              {saving ? 'સાચવી રહ્યું છે...' : `ઉમેરો ${files.length ? `(${files.length})` : ''}`}
             </button>
           </form>
         </section>
@@ -304,7 +293,7 @@ const GalleryPage: React.FC = () => {
             <button className="lightbox-next" aria-label="Next" onClick={nextImage}>›</button>
             <button
               className="lightbox-download"
-              title="Download"
+              title="ડાઉનલોડ કરો"
               onClick={downloadCurrentImage}
             >
               ⬇️

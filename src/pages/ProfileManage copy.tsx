@@ -93,54 +93,54 @@ console.log(token,"q");
   if (profileLoading && !profileData) return <p>Loading profile...</p>;
 
   return (
-    <AuthCard title="My Profile" subtitle={editing ? 'Edit your details' : 'Overview'} backTo="/dashboard">
+    <AuthCard title="મારી પ્રોફાઇલ" subtitle={editing ? 'તમારી વિગતો અપડેટ કરો' : 'ઝાંખી'} backTo="/dashboard">
       {error && <div className="field-error" style={{ marginBottom:'0.75rem' }}>{error}</div>}
       {!editing && (
         <div style={{ display:'flex', flexDirection:'column', gap:'0.6rem' }}>
-          <div><strong>Name:</strong> {form.name || '—'}</div>
-          <div><strong>Village:</strong> {form.village || '—'}</div>
-          <div><strong>Current Address:</strong> {form.currentAddress || '—'}</div>
-          <div><strong>Business Details:</strong> {form.businessDetails || '—'}</div>
-          <div><strong>Total Family Members:</strong> {form.totalFamilyMembers || '—'}</div>
+          <div><strong>નામ:</strong> {form.name || '—'}</div>
+          <div><strong>ગામ:</strong> {form.village || '—'}</div>
+          <div><strong>હાલનું સરનામું:</strong> {form.currentAddress || '—'}</div>
+          <div><strong>વ્યવસાય વિગતો:</strong> {form.businessDetails || '—'}</div>
+          <div><strong>કુલ પરિવારના સભ્યો:</strong> {form.totalFamilyMembers || '—'}</div>
           <div>
-            <strong>Family Members:</strong>
+            <strong>પરિવારના સભ્યો:</strong>
             <ul style={{ margin:0, paddingLeft:'1rem' }}>
               {form.familyMembers.map((fm,i)=>(
                 <li key={i}>{fm.memberName || 'Member'}{fm.age ? `, Age: ${fm.age}` : ''}{fm.std ? `, Std: ${fm.std}`: ''}</li>
               ))}
             </ul>
           </div>
-          <button className="btn btn-primary" type="button" onClick={()=>setEditing(true)}>Edit Profile</button>
+          <button className="btn btn-primary" type="button" onClick={()=>setEditing(true)}>પ્રોફાઇલ અપડેટ કરો</button>
         </div>
       )}
       {editing && (
         <form onSubmit={save} style={{ display:'flex', flexDirection:'column', gap:'0.9rem' }}>
-          <input className="input" placeholder="Name" value={form.name||''} onChange={e=>setForm(f=>({...f,name:e.target.value}))} />
-          <input className="input" placeholder="Village" value={form.village||''} onChange={e=>setForm(f=>({...f,village:e.target.value}))} />
-          <input className="input" placeholder="Current Address" value={form.currentAddress||''} onChange={e=>setForm(f=>({...f,currentAddress:e.target.value}))} />
-          <input className="input" placeholder="Business Details" value={form.businessDetails||''} onChange={e=>setForm(f=>({...f,businessDetails:e.target.value}))} />
-          <input className="input" placeholder="Total Family Members" type="number" value={form.totalFamilyMembers||''} onChange={e=>setForm(f=>({...f,totalFamilyMembers:e.target.value?Number(e.target.value):''}))} />
+          <input className="input" placeholder="નામ" value={form.name||''} onChange={e=>setForm(f=>({...f,name:e.target.value}))} />
+          <input className="input" placeholder="ગામ" value={form.village||''} onChange={e=>setForm(f=>({...f,village:e.target.value}))} />
+          <input className="input" placeholder="હાલનું સરનામું" value={form.currentAddress||''} onChange={e=>setForm(f=>({...f,currentAddress:e.target.value}))} />
+          <input className="input" placeholder="વ્યવસાય વિગતો" value={form.businessDetails||''} onChange={e=>setForm(f=>({...f,businessDetails:e.target.value}))} />
+          <input className="input" placeholder="કુલ પરિવારના સભ્યો" type="number" value={form.totalFamilyMembers||''} onChange={e=>setForm(f=>({...f,totalFamilyMembers:e.target.value?Number(e.target.value):''}))} />
           <div style={{ display:'flex', flexDirection:'column', gap:'0.6rem' }}>
-            <strong>Family Members</strong>
+            <strong>પરિવારના સભ્યો</strong>
             {form.familyMembers.map((m,idx)=>(
               <div key={idx} style={{ border:'1px solid var(--color-border)', padding:'0.6rem', borderRadius:8, display:'flex', flexDirection:'column', gap:'0.4rem' }}>
-                <input className="input" placeholder="Member Name" value={m.memberName} onChange={e=>updateMember(idx,{memberName:e.target.value})} />
-                <input className="input" placeholder="Age" type="number" value={m.age||''} onChange={e=>updateMember(idx,{age:e.target.value?Number(e.target.value):''})} />
-                <input className="input" placeholder="Std" value={m.std||''} onChange={e=>updateMember(idx,{std:e.target.value})} />
-                <input className="input" placeholder="Percentage" type="number" value={m.percentage||''} onChange={e=>updateMember(idx,{percentage:e.target.value?Number(e.target.value):''})} />
-                {form.familyMembers.length>1 && <button type="button" className="btn btn-ghost" onClick={()=>removeMember(idx)}>Remove</button>}
+                <input className="input" placeholder="સભ્યનું નામ" value={m.memberName} onChange={e=>updateMember(idx,{memberName:e.target.value})} />
+                <input className="input" placeholder="ઉંમર" type="number" value={m.age||''} onChange={e=>updateMember(idx,{age:e.target.value?Number(e.target.value):''})} />
+                <input className="input" placeholder="ધોરણ" value={m.std||''} onChange={e=>updateMember(idx,{std:e.target.value})} />
+                <input className="input" placeholder="ટકાવારી" type="number" value={m.percentage||''} onChange={e=>updateMember(idx,{percentage:e.target.value?Number(e.target.value):''})} />
+                {form.familyMembers.length>1 && <button type="button" className="btn btn-ghost" onClick={()=>removeMember(idx)}>દૂર કરો</button>}
               </div>
             ))}
-            <button type="button" className="btn btn-primary" onClick={addMember}>Add Member</button>
+            <button type="button" className="btn btn-primary" onClick={addMember}>સભ્ય ઉમેરો</button>
           </div>
           <div style={{ display:'flex', gap:'0.75rem', marginTop:'0.5rem' }}>
             <button disabled={saving} className="btn btn-primary" type="submit">{saving? 'Saving...' : 'Save'}</button>
-            <button type="button" className="btn" onClick={()=>{ setEditing(false); }}>Cancel</button>
+            <button type="button" className="btn" onClick={()=>{ setEditing(false); }}>રદ કરો</button>
           </div>
         </form>
       )}
       <div className="form-footer" style={{ marginTop:'1rem' }}>
-        Need advanced changes? <Link to="/user-details">Open full form</Link>
+        અદ્યતન ફેરફારોની જરૂર છે? <Link to="/user-details">પૂર્ણ ફોર્મ ખોલો</Link>
       </div>
     </AuthCard>
   );

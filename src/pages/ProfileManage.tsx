@@ -36,7 +36,7 @@ const emptyMember: Member = {
   age: "",
   std: "",
 
-  activityType: "study",
+  activityType: "અભ્યાસ",
   businessWorkType: "",
   businessName: "",
   businessDescription: "",
@@ -79,7 +79,7 @@ const ProfileManage: React.FC = () => {
         age: m.age ?? "",
         std: m.std ?? "",
 
-        activityType: m.activityType || "study",
+        activityType: m.activityType || "અભ્યાસ",
         businessWorkType: m.businessWorkType || "",
         businessName: m.businessName || "",
         businessDescription: m.businessDescription || "",
@@ -126,9 +126,9 @@ const ProfileManage: React.FC = () => {
       const list: string[] = [];
       if (!m.memberName.trim()) list.push("Member name");
       if (m.age === "" || m.age == null) list.push("Age");
-      if ((m.activityType || "study") === "study") {
+      if ((m.activityType || "અભ્યાસ") === "અભ્યાસ") {
         if (!m.std?.trim()) list.push("Std");
-      } else if (m.activityType === "business") {
+      } else if (m.activityType === "વ્યવસાય") {
         if (!m.businessWorkType?.trim()) list.push("Business work type");
         if (!m.businessName?.trim()) list.push("Business name");
         if (!m.businessDescription?.trim()) list.push("Business description");
@@ -169,19 +169,19 @@ const ProfileManage: React.FC = () => {
           .map((m) => ({
             memberName: m.memberName,
             age: m.age === "" ? undefined : m.age,
-            std: m.activityType === "study" ? m.std : undefined,
+            std: m.activityType === "અભ્યાસ" ? m.std : undefined,
 
             activityType: m.activityType,
             businessWorkType:
-              m.activityType === "business" ? m.businessWorkType : undefined,
+              m.activityType === "વ્યવસાય" ? m.businessWorkType : undefined,
             businessName:
-              m.activityType === "business" ? m.businessName : undefined,
+              m.activityType === "વ્યવસાય" ? m.businessName : undefined,
             businessDescription:
-              m.activityType === "business" ? m.businessDescription : undefined,
+              m.activityType === "વ્યવસાય" ? m.businessDescription : undefined,
             memberPhone: m.memberPhone?.trim() ? m.memberPhone : undefined,
             relation: m.relation?.trim() ? m.relation : undefined,
             noneCategory:
-              m.activityType === "none"
+              m.activityType === "કોઈનહીં"
                 ? m.noneCategory || undefined
                 : undefined,
           })),
@@ -197,7 +197,7 @@ const ProfileManage: React.FC = () => {
 
   if (token && (profileLoading || (hasProfile === null && !profileData))) {
     return (
-      <AuthCard title="My Profile" subtitle="Loading">
+      <AuthCard title="મારી પ્રોફાઇલ" subtitle="લોડ કરી રહ્યું છે">
         <p>Loading profile...</p>
       </AuthCard>
     );
@@ -205,8 +205,8 @@ const ProfileManage: React.FC = () => {
 
   return (
     <AuthCard
-      title="My Profile"
-      subtitle={editing ? "Edit your details" : "Overview"}
+      title="મારી પ્રોફાઇલ"
+      subtitle={editing ? "તમારી વિગતો અપડેટ કરો" : "ઝાંખી"}
     >
       {error && (
         <div className="field-error" style={{ marginBottom: "0.75rem" }}>
@@ -223,27 +223,27 @@ const ProfileManage: React.FC = () => {
             <div className="profile-sub">{form.businessDetails || form.businessType || 'Member'}</div>
 
             <div className="profile-stats">
-              <div className="stat-row"><div className="stat-label">Age</div><div className="stat-label">{form.age || '—'}</div></div>
-              <div className="stat-row"><div className="stat-label">Village:</div><div className="stat-label">{form.village || '—'}</div></div>
-              <div className="stat-row"><div className="stat-label">City:</div><div className="stat-label"> {form.cityName || '—'}</div></div>
-              <div className="stat-row"><div className="stat-label">Current Address:</div> <div className="stat-label">{form.currentAddress || '—'}</div></div>
-              <div className="stat-row"><div className="stat-label">Phone:</div><div className="stat-label"> {profileData?.user?.phone || form.phoneNumber || '—'}</div></div>
-              <div className="stat-row"><div className="stat-label">Email:</div><div className="stat-label"> {profileData?.user?.email || '—'}</div></div>
-              <div className="stat-row"><div className="stat-label">Business Type:</div><div className="stat-label"> {form.businessType || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">ઉંમર</div><div className="stat-label">{form.age || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">ગામ:</div><div className="stat-label">{form.village || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">શહેર:</div><div className="stat-label"> {form.cityName || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">હાલનું સરનામું:</div> <div className="stat-label">{form.currentAddress || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">ફોન:</div><div className="stat-label"> {profileData?.user?.phone || form.phoneNumber || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">ઇમેઇલ:</div><div className="stat-label"> {profileData?.user?.email || '—'}</div></div>
+              <div className="stat-row"><div className="stat-label">વ્યવસાયનો પ્રકાર:</div><div className="stat-label"> {form.businessType || '—'}</div></div>
             </div>
           </div>
 
           <div className="profile-details">
 
-            <h4 style={{ marginTop: 12 }}>Family Members</h4>
+            <h4 style={{ marginTop: 12 }}>પરિવારના સભ્યો</h4>
             <div className="family-grid">
               {form.familyMembers && form.familyMembers.length ? form.familyMembers.map((m, i) => (
                 <div key={i} className="family-card">
                   <div className="family-top">
                     <div className="family-avatar">{m.memberName ? m.memberName.split(' ').map(s => s[0]).slice(0, 2).join('') : '—'}</div>
                     <div className="family-info">
-                      <div className="family-name">{m.memberName || 'Member'}</div>
-                      <div className="family-meta">{m.relation || ''} {m.age ? `· ${m.age} yrs` : ''}</div>
+                      <div className="family-name">{m.memberName || 'સભ્ય'}</div>
+                      <div className="family-meta">{m.relation || ''} {m.age ? `· ${m.age} વર્ષ` : ''}</div>
                     </div>
                   </div>
                   <div className="family-bio">
@@ -258,11 +258,11 @@ const ProfileManage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              )) : <div>No family members added.</div>}
+              )) : <div>કોઈ પરિવારના સભ્ય ઉમેર્યા નથી.</div>}
             </div>
 
             <div style={{ marginTop: 12 }}>
-              <button className="btn btn-primary" onClick={() => setEditing(true)}>Edit Profile</button>
+              <button className="btn btn-primary" onClick={() => setEditing(true)}>પ્રોફાઇલ અપડેટ કરો</button>
             </div>
           </div>
         </div>
@@ -271,7 +271,7 @@ const ProfileManage: React.FC = () => {
         <form onSubmit={save} className="member-editor">
           <input
             className={`input ${fieldErrors.name ? "input-error" : ""}`}
-            placeholder="Name"
+            placeholder="નામ"
             value={form.name || ""}
             onChange={(e) => {
               setFieldErrors((fe) => {
@@ -287,7 +287,7 @@ const ProfileManage: React.FC = () => {
           )}
           <input
             className={`input ${fieldErrors.age ? "input-error" : ""}`}
-            placeholder="Age"
+            placeholder="ઉંમર"
             type="number"
             value={form.age || ""}
             onChange={(e) => {
@@ -307,7 +307,7 @@ const ProfileManage: React.FC = () => {
           )}
           <input
             className="input"
-            placeholder="Village"
+            placeholder="ગામ"
             value={form.village || ""}
             onChange={(e) =>
               setForm((f) => ({ ...f, village: e.target.value }))
@@ -318,7 +318,7 @@ const ProfileManage: React.FC = () => {
           )}
           <input
             className="input"
-            placeholder="Current Address"
+            placeholder="હાલનું સરનામું"
             value={form.currentAddress || ""}
             onChange={(e) =>
               setForm((f) => ({ ...f, currentAddress: e.target.value }))
@@ -329,7 +329,7 @@ const ProfileManage: React.FC = () => {
           )}
           <input
             className="input"
-            placeholder="Business Details"
+            placeholder="વ્યવસાય વિગતો"
             value={form.businessDetails || ""}
             onChange={(e) =>
               setForm((f) => ({ ...f, businessDetails: e.target.value }))
@@ -356,22 +356,22 @@ const ProfileManage: React.FC = () => {
               setForm((f) => ({ ...f, businessType: e.target.value }))
             }
           >
-            <option value="">Business Type</option>
-            <option value="personal">Personal</option>
-            <option value="job">Job</option>
-            <option value="none">None</option>
+            <option value="">વ્યવસાયનો પ્રકાર</option>
+            <option value="વ્યક્તિગત">વ્યક્તિગત</option>
+            <option value="નોકરી">નોકરી</option>
+            <option value="કોઈનહીં">કોઈ નહીં</option>
           </select>
           <div className="member-grid">
-            <strong>Family Members</strong>
+            <strong>પરિવારના સભ્યો</strong>
             {form.familyMembers.map((m, idx) => (
               <div key={idx} className="member-card">
-                <h4>Member {idx + 1}</h4>
+                <h4>સભ્ય {idx + 1}</h4>
                 <input
                   className={`input ${memberErrors[idx]?.includes("Member name")
                     ? "input-error"
                     : ""
                     }`}
-                  placeholder="Member Name"
+                  placeholder="સભ્યનું નામ"
                   value={m.memberName}
                   onChange={(e) => {
                     updateMember(idx, { memberName: e.target.value });
@@ -388,20 +388,20 @@ const ProfileManage: React.FC = () => {
                 />
                 <select
                   className="input"
-                  value={m.activityType || "study"}
+                  value={m.activityType || "અભ્યાસ"}
                   onChange={(e) =>
                     updateMember(idx, { activityType: e.target.value })
                   }
                 >
-                  <option value="study">Study</option>
-                  <option value="business">Business</option>
-                  <option value="none">None / Home</option>
+                  <option value="અભ્યાસ">અભ્યાસ</option>
+                  <option value="વ્યવસાય">વ્યવસાય</option>
+                  <option value="કોઈનહીં">કોઈ નહીં / Home</option>
                 </select>
                 <div className="inline-actions">
                   <input
                     className={`input ${memberErrors[idx]?.includes("Age") ? "input-error" : ""
                       }`}
-                    placeholder="Age"
+                    placeholder="ઉંમર"
                     type="number"
                     value={m.age || ""}
                     onChange={(e) => {
@@ -417,11 +417,11 @@ const ProfileManage: React.FC = () => {
                       });
                     }}
                   />
-                  {(m.activityType || "study") === "study" && (
+                  {(m.activityType || "અભ્યાસ") === "અભ્યાસ" && (
                     <input
                       className={`input ${memberErrors[idx]?.includes("Std") ? "input-error" : ""
                         }`}
-                      placeholder="Std"
+                      placeholder="ધોરણ"
                       value={m.std || ""}
                       onChange={(e) => {
                         updateMember(idx, { std: e.target.value });
@@ -435,7 +435,7 @@ const ProfileManage: React.FC = () => {
                       }}
                     />
                   )}
-                  {m.activityType === "business" && (
+                  {m.activityType === "વ્યવસાય" && (
                     <select
                       className={`input ${memberErrors[idx]?.includes("Business work type")
                         ? "input-error"
@@ -456,21 +456,21 @@ const ProfileManage: React.FC = () => {
                       }}
                     >
                       <option value="">Work Type</option>
-                      <option value="personal">Personal</option>
-                      <option value="job">Job</option>
-                      <option value="none">None</option>
+                      <option value="વ્યક્તિગત">વ્યક્તિગત</option>
+                      <option value="નોકરી">નોકરી</option>
+                      <option value="કોઈનહીં">કોઈ નહીં</option>
                     </select>
                   )}
                 </div>
 
-                {m.activityType === "business" && (
+                {m.activityType === "વ્યવસાય" && (
                   <>
                     <input
-                      className={`input ${memberErrors[idx]?.includes("Business name")
+                      className={`input ${memberErrors[idx]?.includes("વ્યવસાયનું નામ")
                         ? "input-error"
                         : ""
                         }`}
-                      placeholder="Business / Employer Name"
+                      placeholder="વ્યવસાય / નોકરીદાતાનું નામ"
                       value={m.businessName || ""}
                       onChange={(e) => {
                         updateMember(idx, { businessName: e.target.value });
@@ -509,7 +509,7 @@ const ProfileManage: React.FC = () => {
                     />
                   </>
                 )}
-                {m.activityType === "none" && (
+                {m.activityType === "કોઈનહીં" && (
                   <>
                     <select
                       className={`input ${memberErrors[idx]?.includes("None category")
@@ -530,10 +530,10 @@ const ProfileManage: React.FC = () => {
                         });
                       }}
                     >
-                      <option value="">Select Category</option>
-                      <option value="house_wife">House Wife</option>
-                      <option value="retired">Retired</option>
-                      <option value="child">Child</option>
+                      <option value="">શ્રેણી પસંદ કરો</option>
+                      <option value="ગૃહિણી">ગૃહિણી</option>
+                      <option value="નિવૃત્ત">નિવૃત્ત</option>
+                      <option value="બાળક">બાળક</option>
                     </select>
                   </>
                 )}
@@ -552,18 +552,18 @@ const ProfileManage: React.FC = () => {
                     updateMember(idx, { relation: e.target.value })
                   }
                 >
-                  <option value="">Relation</option>
-                  <option value="father">Father</option>
-                  <option value="mother">Mother</option>
-                  <option value="wife">Wife</option>
-                  <option value="son">Son</option>
-                  <option value="daughter">Daughter</option>
-                  <option value="brother">Brother</option>
-                  <option value="other">Other</option>
+                  <option value="">સંબંધ</option>
+                <option value="પિતા">પિતા</option>
+                <option value="માતા">માતા</option>
+                <option value="પત્ની">પત્ની</option>
+                <option value="પુત્ર">પુત્ર</option>
+                <option value="પુત્રી">પુત્રી</option>
+                <option value="ભાઈ">ભાઈ</option>
+                <option value="અન્ય">અન્ય</option>
                 </select>
                 {memberErrors[idx] && (
                   <div className="field-error">
-                    Missing: {memberErrors[idx].join(", ")}
+                    ખૂટે છે: {memberErrors[idx].join(", ")}
                   </div>
                 )}
                 {form.familyMembers.length > 1 && (
@@ -583,7 +583,7 @@ const ProfileManage: React.FC = () => {
               style={{ gridColumn: "1 / -1" }}
               onClick={addMember}
             >
-              Add Member
+              સભ્ય ઉમેરો
             </button>
           </div>
           <div className="profile-actions">
@@ -597,13 +597,13 @@ const ProfileManage: React.FC = () => {
                 setEditing(false);
               }}
             >
-              Cancel
+              રદ કરો
             </button>
           </div>
         </form>
       )}
       <div className="form-footer" style={{ marginTop: "1rem" }}>
-        Need advanced changes? <Link to="/user-details">Open full form</Link>
+        અદ્યતન ફેરફારોની જરૂર છે? <Link to="/user-details">પૂર્ણ ફોર્મ ખોલો</Link>
       </div>
     </AuthCard>
   );

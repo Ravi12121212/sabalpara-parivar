@@ -39,7 +39,7 @@ export function useProfile(enabled: boolean) {
     console.log('[UserDetailsForm] fetching existing profile data1');
     api.get('/profile')
       .then(r => setData(r.data))
-      .catch(err => setError(err.response?.data?.message || 'Failed to load profile'))
+      .catch(err => setError(err.response?.data?.message || 'પ્રોફાઇલ લોડ કરવામાં નિષ્ફળ'))
       .finally(() => setLoading(false));
   }, [enabled]);
 

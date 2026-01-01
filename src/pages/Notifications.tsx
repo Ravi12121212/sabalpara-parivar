@@ -48,7 +48,7 @@ const Notifications: React.FC = () => {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        if (!text && !file) return alert('Provide text or an image');
+        if (!text && !file) return alert('લખાણ અથવા છબી આપો');
         setSubmitting(true);
         try {
             let imageUrl: string | undefined;
@@ -62,7 +62,7 @@ const Notifications: React.FC = () => {
             setItems((s) => [created, ...s]);
         } catch (err: any) {
             console.error(err);
-            alert(err?.message || 'Failed to create notification');
+            alert(err?.message || 'સૂચના બનાવવામાં નિષ્ફળ થયાં');
         } finally {
             setSubmitting(false);
         }
@@ -70,28 +70,28 @@ const Notifications: React.FC = () => {
 
     return (
         <div className="container notifications-page">
-            <h1 className="notifications-title">Notifications</h1>
+            <h1 className="notifications-title">સૂચનાઓ</h1>
             {isAdmin && (
                 <RequireAdmin>
                     <section style={{ marginBottom: 24, background: '#fffef5', border: '1px solid #ffe08a', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', borderRadius: 14, padding: '1.25rem' }}>
-                        <h3 style={{ margin: 0, marginBottom: '0.75rem', fontSize: 18, fontWeight: 600 }}>Create Notification</h3>
+                        <h3 style={{ margin: 0, marginBottom: '0.75rem', fontSize: 18, fontWeight: 600 }}>સૂચના બનાવો</h3>
                         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '0.75rem' }}>
                             <div>
-                                <label style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Text (optional)</label>
-                                <textarea placeholder="Text (optional)" value={text} onChange={(e) => setText(e.target.value)} rows={3} style={{ width: '100%', padding: 8, borderRadius: 8, border: '1px solid #c7c7c7' }} />
+                                <label style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>લખાણ (વૈકલ્પિક)</label>
+                                <textarea placeholder="લખાણ (વૈકલ્પિક)" value={text} onChange={(e) => setText(e.target.value)} rows={3} style={{ width: '100%', padding: 8, borderRadius: 8, border: '1px solid #c7c7c7' }} />
                             </div>
                             <div>
-                                <label style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Image (optional)</label>
+                                <label style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>છબી (વૈકલ્પિક)</label>
                                 <div className="file-picker">
                                     <input id="notification-file" type="file" accept=".jpg,.jpeg,.png,.webp" onChange={(e) => setFile(e.target.files?.[0] || null)} style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0 0 0 0)', border: 0 }} />
-                                    <label htmlFor="notification-file" className="file-picker-button">ફાઇલ અપલોડ કરો (Image)</label>
-                                    <div className={`file-picker-filename ${preview ? '' : 'muted'}`}>{file ? file.name : 'No file chosen'}</div>
+                                    <label htmlFor="notification-file" className="file-picker-button">ફાઇલ અપલોડ કરો (છબી)</label>
+                                    <div className={`file-picker-filename ${preview ? '' : 'muted'}`}>{file ? file.name : 'કોઈ ફાઇલ પસંદ કરેલી નથી'}</div>
                                 </div>
                             </div>
                             {preview && <img src={preview} alt="preview" style={{ maxHeight: 200, borderRadius: 8 }} />}
                             <div>
                                 <button type="submit" disabled={submitting} className="btn btn-primary" style={{ height: 40, padding: '0 16px', borderRadius: 8 }}>
-                                    {submitting ? 'Creating…' : 'Create'}
+                                    {submitting ? 'બનાવી રહ્યું છે...' : 'બનાવો'}
                                 </button>
                             </div>
                         </form>
@@ -103,7 +103,7 @@ const Notifications: React.FC = () => {
                 {loading ? (
                     <p>Loading…</p>
                 ) : items.length === 0 ? (
-                    <p>No notifications yet.</p>
+                    <p>હજુ સુધી કોઈ સૂચનાઓ નથી.</p>
                 ) : (
                     <div className="notif-list">
                         {items.map((it, idx) => {
@@ -154,9 +154,9 @@ const Notifications: React.FC = () => {
                                                 <div className="notif-relative">{formatRelative(d)}</div>
                                                 <div className="notif-actions">
                                                     {isAdmin && <button className="notif-delete" onClick={async () => {
-                                                        if (!confirm('Delete this notification?')) return;
-                                                        try { await notifications.remove(id); setItems(items.filter(x => (x._id || x.id) !== id)); } catch (e: any) { alert(e?.message || 'Failed to delete'); }
-                                                    }}>Delete</button>}
+                                                        if (!confirm('આ સૂચના કાઢી નાખીએ?')) return;
+                                                        try { await notifications.remove(id); setItems(items.filter(x => (x._id || x.id) !== id)); } catch (e: any) { alert(e?.message || 'કાઢી નાખવામાં નિષ્ફળ થયાં'); }
+                                                    }}>કાઢી નાખો</button>}
                                                 </div>
                                             </div>
                                              </div>

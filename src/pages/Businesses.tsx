@@ -25,12 +25,12 @@ const Businesses: React.FC = () => {
   },[filter, items]);
 
   return (
-    <AuthCard title="Businesses" subtitle="Browse all businesses" backTo="/profile-manage">
+    <AuthCard title="વ્યવસાયો" subtitle="બધા વ્યવસાયો જુઓ" backTo="/profile-manage">
       <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
-        <TextInput placeholder="Search businesses..." value={filter} onChange={e=>setFilter(e.target.value)} />
+        <TextInput placeholder="વ્યવસાયો શોધો..." value={filter} onChange={e=>setFilter(e.target.value)} />
         {loading && <p style={{ fontSize:'0.85rem' }}>Loading...</p>}
         {error && <div className="field-error" style={{ marginBottom:'0.5rem' }}>{error}</div>}
-        {!loading && !error && filtered.length === 0 && <p style={{ fontSize:'0.8rem' }}>No businesses found.</p>}
+        {!loading && !error && filtered.length === 0 && <p style={{ fontSize:'0.8rem' }}>કોઈ વ્યવસાય મળ્યો નથી.</p>}
         <div style={{ maxHeight:'60vh', overflowY:'auto', borderRadius:12, background:'#fff', padding:'0.5rem', boxShadow:'var(--shadow-soft)' }}>
           {filtered.map(b => (
             <div key={b.name} style={{ padding:'0.6rem 0.7rem', borderBottom:'1px solid var(--color-border)' }}>

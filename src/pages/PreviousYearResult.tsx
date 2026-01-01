@@ -136,7 +136,7 @@ const PreviousYearResult: React.FC = () => {
       }}>
         <input
           type="text"
-          placeholder="Search name / father / gamnu"
+          placeholder="નામ / પિતા / ગામ શોધો"
           value={search}
           onChange={(e)=>setSearch(e.target.value)}
           style={{ padding:'0.6rem', border:'1px solid #ccc', borderRadius:8 }}

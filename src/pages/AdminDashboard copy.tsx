@@ -68,7 +68,7 @@ console.log(
   if (!isAdmin) return <Navigate to="/profile-manage" replace />;
 
   return (
-    <AuthCard title="Admin Dashboard" subtitle="Overview" backTo="/profile-manage">
+    <AuthCard title="એડમિન ડેશબોર્ડ" subtitle="ઝાંખી" backTo="/profile-manage">
       {error && <div className="field-error" style={{ marginBottom:'0.75rem' }}>{error}</div>}
       {loading ? <p>Loading users...</p> : (
         <>

@@ -37,9 +37,9 @@ const AdminWelcome: React.FC = () => {
   return (
     <>
       <div className="card" style={{ padding: "1.25rem" }}>
-        <h2 style={{ marginBottom: "0.5rem" }}>Welcome, Admin</h2>
+        <h2 style={{ marginBottom: "0.5rem" }}>સ્વાગત છે, એડમિન</h2>
         <p style={{ margin: 0, color: "#555", marginBottom: "0.75rem" }}>
-          Quick actions
+          ઝડપી ક્રિયાઓ
         </p>
         <div
           style={{
@@ -63,7 +63,7 @@ const AdminWelcome: React.FC = () => {
               border: "1px solid #1976d2",
             }}
           >
-            My Profile →
+            મારી પ્રોફાઇલ →
           </Link>
           <Link
             to="/village-list"
@@ -80,7 +80,7 @@ const AdminWelcome: React.FC = () => {
               boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
             }}
           >
-            Village List →
+            ગામડાની યાદી →
           </Link>
           <Link
             to="/committee-members"
@@ -97,7 +97,7 @@ const AdminWelcome: React.FC = () => {
               boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
             }}
           >
-            Committee Members →
+            સમિતિના સભ્યો →
           </Link>
           <Link
             to="/gallery"
@@ -114,7 +114,7 @@ const AdminWelcome: React.FC = () => {
               boxShadow: "0 2px 6px rgba(0,0,0,0.06)",
             }}
           >
-            Gallery →
+            ગેલેરી →
           </Link>
         </div>
       </div>

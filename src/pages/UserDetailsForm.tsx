@@ -8,13 +8,13 @@ interface FamilyMemberForm {
   memberName: string;
   age?: number | "";
   std?: string;
-  activityType?: string; // study | business | none
-  businessWorkType?: string; // personal | job | none
+  activityType?: string; // અભ્યાસ | વ્યવસાય | none
+  businessWorkType?: string; // વ્યક્તિગત | નોકરી | none
   businessName?: string;
   businessDescription?: string;
   memberPhone?: string;
   relation?: string;
-  noneCategory?: string; // house_wife | retired | child
+  noneCategory?: string; // ગૃહિણી | નિવૃત્ત | બાળક
 }
 
 interface ProfileForm {
@@ -25,7 +25,7 @@ interface ProfileForm {
   businessDetails?: string;
   phoneNumber?: string;
   cityName?: string;
-  businessType?: string; // personal | job | none
+  businessType?: string; // વ્યક્તિગત | નોકરી | none
   familyMembers: FamilyMemberForm[];
 }
 
@@ -33,7 +33,7 @@ const emptyMember: FamilyMemberForm = {
   memberName: "",
   age: "",
   std: "",
-  activityType: "study",
+  activityType: "અભ્યાસ",
   businessWorkType: "",
   businessName: "",
   businessDescription: "",
@@ -90,7 +90,7 @@ const UserDetailsForm: React.FC = () => {
               age: m.age ?? "",
               std: m.std ?? "",
 
-              activityType: m.activityType || "study",
+              activityType: m.activityType || "અભ્યાસ",
               businessWorkType: m.businessWorkType || "",
               businessName: m.businessName || "",
               businessDescription: m.businessDescription || "",
@@ -121,7 +121,7 @@ const UserDetailsForm: React.FC = () => {
             age: m.age ?? "",
             std: m.std ?? "",
 
-            activityType: m.activityType || "study",
+            activityType: m.activityType || "અભ્યાસ",
             businessWorkType: m.businessWorkType || "",
             businessName: m.businessName || "",
             businessDescription: m.businessDescription || "",
@@ -239,12 +239,12 @@ const UserDetailsForm: React.FC = () => {
     if (!form.familyMembers.length) errs.push("at least one family member");
     form.familyMembers.forEach((m, i) => {
       if (!m.memberName.trim()) errs.push(`member ${i + 1} name`);
-      const type = m.activityType || "study";
-      if (type === "study") {
+      const type = m.activityType || "અભ્યાસ";
+      if (type === "અભ્યાસ") {
         if (m.age === "" || m.age == null) errs.push(`member ${i + 1} age`);
         if (!m.std?.trim()) errs.push(`member ${i + 1} std`);
-        // Removed percentage validation for study
-      } else if (type === "business") {
+        // Removed percentage validation for અભ્યાસ
+      } else if (type === "વ્યવસાય") {
         if (m.age === "" || m.age == null) errs.push(`member ${i + 1} age`);
         if (!m.businessWorkType?.trim()) errs.push(`member ${i + 1} work type`);
         if (!m.businessName?.trim()) errs.push(`member ${i + 1} business name`);
@@ -257,7 +257,7 @@ const UserDetailsForm: React.FC = () => {
     });
     if (errs.length) {
       setLoading(false);
-      setError("Please complete required fields: " + errs.join(", "));
+      setError("કૃપા કરીને જરૂરી ફીલ્ડ્સ ભરો: " + errs.join(", "));
       return;
     }
     try {
@@ -273,19 +273,19 @@ const UserDetailsForm: React.FC = () => {
         familyMembers: form.familyMembers.map((m) => ({
           memberName: m.memberName,
           age: m.age === "" ? undefined : m.age,
-          activityType: m.activityType || "study",
-          std: (m.activityType || "study") === "study" ? m.std : undefined,
+          activityType: m.activityType || "અભ્યાસ",
+          std: (m.activityType || "અભ્યાસ") === "અભ્યાસ" ? m.std : undefined,
 
           businessWorkType:
-            m.activityType === "business" ? m.businessWorkType : undefined,
+            m.activityType === "વ્યવસાય" ? m.businessWorkType : undefined,
           businessName:
-            m.activityType === "business" ? m.businessName : undefined,
+            m.activityType === "વ્યવસાય" ? m.businessName : undefined,
           businessDescription:
-            m.activityType === "business" ? m.businessDescription : undefined,
+            m.activityType === "વ્યવસાય" ? m.businessDescription : undefined,
           memberPhone: m.memberPhone?.trim() ? m.memberPhone : undefined,
           relation: m.relation?.trim() ? m.relation : undefined,
           noneCategory:
-            m.activityType === "none" ? m.noneCategory || undefined : undefined,
+            m.activityType === "કોઈનહીં" ? m.noneCategory || undefined : undefined,
         })),
       };
       await api.post("/profile", payload);
@@ -313,7 +313,7 @@ const UserDetailsForm: React.FC = () => {
     <AuthCard title="Create Profile" subtitle="Enter your details" backTo="/">
       {hasProfile && (
         <div className="info-text" style={{ marginBottom: "0.75rem" }}>
-          Profile already exists. You can update details and save again.
+          પ્રોફાઇલ પહેલેથી જ અસ્તિત્વમાં છે. તમે વિગતો અપડેટ કરી શકો છો અને ફરીથી સાચવી શકો છો.
         </div>
       )}
       <form onSubmit={submit} className="member-editor">
@@ -399,7 +399,7 @@ const UserDetailsForm: React.FC = () => {
                       color: "var(--color-text-soft)",
                     }}
                   >
-                    Searching...
+                    શોધી રહ્યું છે...
                   </li>
                 )}
                 {!villageLoading && villageSuggestions.length === 0 && (
@@ -411,7 +411,7 @@ const UserDetailsForm: React.FC = () => {
                       color: "var(--color-text-soft)",
                     }}
                   >
-                    No matches
+                    કોઈ મેળ નથી.
                   </li>
                 )}
                 {!villageLoading &&
@@ -430,16 +430,16 @@ const UserDetailsForm: React.FC = () => {
                   ))}
               </ul>
             )}
-  </div>
-  <input
+        </div>
+        <input
           className="input"
-          placeholder="Name"
+          placeholder="નામ"
           value={form.name || ""}
           onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
         />
         <input
           className="input"
-          placeholder="Current Address"
+          placeholder="હાલનું સરનામું"
           value={form.currentAddress || ""}
           onChange={(e) =>
             setForm((f) => ({ ...f, currentAddress: e.target.value }))
@@ -447,13 +447,13 @@ const UserDetailsForm: React.FC = () => {
         />
         <input
           className="input"
-          placeholder="City Name"
+          placeholder="શહેરનું નામ"
           value={form.cityName || ""}
           onChange={(e) => setForm((f) => ({ ...f, cityName: e.target.value }))}
         />
         <input
           className="input"
-          placeholder="Age"
+          placeholder="ઉંમર"
           type="number"
           value={form.age || ""}
           onChange={(e) =>
@@ -470,27 +470,27 @@ const UserDetailsForm: React.FC = () => {
             setForm((f) => ({ ...f, businessType: e.target.value }))
           }
         >
-          <option value="">Business Type</option>
-          <option value="personal">Personal</option>
-          <option value="job">Job</option>
-          <option value="none">None</option>
+          <option value="">વ્યવસાયનો પ્રકાર</option>
+          <option value="વ્યક્તિગત">વ્યક્તિગત</option>
+          <option value="નોકરી">નોકરી</option>
+          <option value="કોઈ નહીં">કોઈ નહીં</option>
         </select>
         <textarea
           className="input"
-          placeholder="Business Details"
+          placeholder="વ્યવસાય વિગતો"
           value={form.businessDetails || ""}
           onChange={(e) =>
             setForm((f) => ({ ...f, businessDetails: e.target.value }))
           }
         />
         <div className="member-grid" style={{ marginTop: "0.5rem" }}>
-          <strong style={{ gridColumn: "1 / -1" }}>Family Members</strong>
+          <strong style={{ gridColumn: "1 / -1" }}>પરિવારના સભ્યો</strong>
           {form.familyMembers.map((m, idx) => (
             <div key={idx} className="member-card">
-              <h4>Member {idx + 1}</h4>
+              <h4>સભ્ય {idx + 1}</h4>
               <input
                 className="input"
-                placeholder="Member Name"
+                placeholder="સભ્યનું નામ"
                 value={m.memberName}
                 onChange={(e) =>
                   updateMember(idx, { memberName: e.target.value })
@@ -498,19 +498,19 @@ const UserDetailsForm: React.FC = () => {
               />
               <select
                 className="input"
-                value={m.activityType || "study"}
+                value={m.activityType || "અભ્યાસ"}
                 onChange={(e) =>
                   updateMember(idx, { activityType: e.target.value })
                 }
               >
-                <option value="study">Study</option>
-                <option value="business">Business</option>
-                <option value="none">None / Home</option>
+                <option value="અભ્યાસ">અભ્યાસ</option>
+                <option value="વ્યવસાય">વ્યવસાય</option>
+                <option value="કોઈનહીં">કોઈ નહીં</option>
               </select>
               <div className="inline-actions">
                 <input
                   className="input"
-                  placeholder="Age"
+                  placeholder="ઉંમર"
                   type="number"
                   value={m.age || ""}
                   onChange={(e) =>
@@ -519,15 +519,15 @@ const UserDetailsForm: React.FC = () => {
                     })
                   }
                 />
-                {(m.activityType || "study") === "study" && (
+                {(m.activityType || "અભ્યાસ") === "અભ્યાસ" && (
                   <input
                     className="input"
-                    placeholder="Std"
+                    placeholder="ધોરણ"
                     value={m.std || ""}
                     onChange={(e) => updateMember(idx, { std: e.target.value })}
                   />
                 )}
-                {m.activityType === "business" && (
+                {m.activityType === "વ્યવસાય" && (
                   <select
                     className="input"
                     value={m.businessWorkType || ""}
@@ -535,19 +535,19 @@ const UserDetailsForm: React.FC = () => {
                       updateMember(idx, { businessWorkType: e.target.value })
                     }
                   >
-                    <option value="">Work Type</option>
-                    <option value="personal">Personal</option>
-                    <option value="job">Job</option>
-                    <option value="none">None</option>
+                    <option value="">કામનો પ્રકાર</option>
+                    <option value="વ્યક્તિગત">વ્યક્તિગત</option>
+                    <option value="નોકરી">નોકરી</option>
+                    <option value="કોઈનહીં">કોઈ નહીં</option>
                   </select>
                 )}
               </div>
 
-              {m.activityType === "business" && (
+              {m.activityType === "વ્યવસાય" && (
                 <>
                   <input
                     className="input"
-                    placeholder="Business / Employer Name"
+                    placeholder="વ્યવસાય / નોકરીદાતાનું નામ"
                     value={m.businessName || ""}
                     onChange={(e) =>
                       updateMember(idx, { businessName: e.target.value })
@@ -555,7 +555,7 @@ const UserDetailsForm: React.FC = () => {
                   />
                   <input
                     className="input"
-                    placeholder="Business Description / Role"
+                    placeholder="વ્યવસાયનું વર્ણન / ભૂમિકા"
                     value={m.businessDescription || ""}
                     onChange={(e) =>
                       updateMember(idx, { businessDescription: e.target.value })
@@ -563,7 +563,7 @@ const UserDetailsForm: React.FC = () => {
                   />
                 </>
               )}
-              {m.activityType === "none" && (
+              {m.activityType === "કોઈનહીં" && (
                 <>
                   <select
                     className="input"
@@ -572,16 +572,16 @@ const UserDetailsForm: React.FC = () => {
                       updateMember(idx, { noneCategory: e.target.value })
                     }
                   >
-                    <option value="">Select Category</option>
-                    <option value="house_wife">House Wife</option>
-                    <option value="retired">Retired</option>
-                    <option value="child">Child</option>
+                    <option value="">શ્રેણી પસંદ કરો</option>
+                    <option value="ગૃહિણી">ગૃહિણી</option>
+                    <option value="નિવૃત્ત">નિવૃત્ત</option>
+                    <option value="બાળક">બાળક</option>
                   </select>
                 </>
               )}
               <input
                 className="input"
-                placeholder="Member Phone (optional)"
+                placeholder="સભ્ય નો ફોન નંબર (વૈકલ્પિક)"
                 value={m.memberPhone || ""}
                 onChange={(e) =>
                   updateMember(idx, { memberPhone: e.target.value })
@@ -594,14 +594,14 @@ const UserDetailsForm: React.FC = () => {
                   updateMember(idx, { relation: e.target.value })
                 }
               >
-                <option value="">Relation</option>
-                <option value="father">Father</option>
-                <option value="mother">Mother</option>
-                <option value="wife">Wife</option>
-                <option value="son">Son</option>
-                <option value="daughter">Daughter</option>
-                <option value="brother">Brother</option>
-                <option value="other">Other</option>
+                <option value="">સંબંધ</option>
+                <option value="પિતા">પિતા</option>
+                <option value="માતા">માતા</option>
+                <option value="પત્ની">પત્ની</option>
+                <option value="પુત્ર">પુત્ર</option>
+                <option value="પુત્રી">પુત્રી</option>
+                <option value="ભાઈ">ભાઈ</option>
+                <option value="અન્ય">અન્ય</option>
               </select>
               {form.familyMembers.length > 1 && (
                 <button
@@ -620,12 +620,12 @@ const UserDetailsForm: React.FC = () => {
             style={{ gridColumn: "1 / -1" }}
             onClick={addMember}
           >
-            Add Member
+            સભ્ય ઉમેરો
           </button>
         </div>
         <div className="profile-actions">
           <button disabled={loading} className="btn btn-primary" type="submit">
-            {loading ? "Saving..." : "Save"}
+            {loading ? "સાચવી રહ્યું છે..." : "સાચવો"}
           </button>
         </div>
       </form>

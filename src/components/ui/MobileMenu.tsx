@@ -33,42 +33,42 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose }) => {
               onClick={onClose}
               className={isActive("/profile-manage") ? "active" : ""}
             >
-              Manage Profile
+              પ્રોફાઇલ મેનેજ કરો
             </Link>
             <Link
               to="/businesses"
               onClick={onClose}
               className={isActive("/businesses") ? "active" : ""}
             >
-              Businesses
+              વ્યવસાયો
             </Link>
             <Link
               to="/village-list"
               onClick={onClose}
               className={isActive("/village-list") ? "active" : ""}
             >
-              Village List
+              ગામડાની યાદી
             </Link>
             <Link
               to="/committee-members"
               onClick={onClose}
               className={isActive("/committee-members") ? "active" : ""}
             >
-              ANC Committee Members
+              સમિતિના સભ્યો
             </Link>
             <Link
               to="/notifications"
               onClick={onClose}
               className={isActive("/notifications") ? "active" : ""}
             >
-              Notifications
+              સૂચનાઓ
             </Link>
             <Link
               to="/gallery"
               onClick={onClose}
               className={isActive("/gallery") ? "active" : ""}
             >
-              Gallery
+              ગેલેરી
             </Link>
             {isAdmin && (
               <Link
@@ -76,7 +76,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose }) => {
                 onClick={onClose}
                 className={isActive("/admin-welcome") ? "active" : ""}
               >
-                Admin
+                એડમિન
               </Link>
             )}
             <button
@@ -88,7 +88,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose }) => {
                 navigate("/login");
               }}
             >
-              Logout
+              લોગઆઉટ 
             </button>
           </>
         </nav>

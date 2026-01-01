@@ -14,17 +14,17 @@ const BusinessUsers: React.FC = () => {
     setLoading(true);
     business.users(name)
       .then(res => setData(res))
-      .catch(err => setError(err.response?.data?.message || 'Failed to load users'))
+      .catch(err => setError(err.response?.data?.message || 'વપરાશકર્તાઓ લોડ કરવામાં નિષ્ફળ થયાં'))
       .finally(()=> setLoading(false));
   },[name]);
 
   return (
-    <AuthCard title={decodeURIComponent(name)} subtitle="Users in this business" backTo="/businesses">
+    <AuthCard title={decodeURIComponent(name)} subtitle="આ વ્યવસાયના વપરાશકર્તાઓ" backTo="/businesses">
       {loading && <p style={{ fontSize:'0.85rem' }}>Loading...</p>}
       {error && <div className="field-error" style={{ marginBottom:'0.5rem' }}>{error}</div>}
       {!loading && !error && (
         <div style={{ maxHeight:'60vh', overflowY:'auto', borderRadius:12, background:'#fff', padding:'0.5rem', boxShadow:'var(--shadow-soft)' }}>
-          {(data?.users || []).length === 0 && <p style={{ fontSize:'0.8rem' }}>No users.</p>}
+          {(data?.users || []).length === 0 && <p style={{ fontSize:'0.8rem' }}>કોઈ વપરાશકર્તાઓ નથી.</p>}
           {(data?.users || []).map(u => (
             <div key={u.id} style={{ padding:'0.6rem 0.7rem', borderBottom:'1px solid var(--color-border)' }}>
               <div style={{ fontWeight:600 }}>{u.name || '—'}</div>

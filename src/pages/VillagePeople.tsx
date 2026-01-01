@@ -40,12 +40,12 @@ const VillagePeople: React.FC = () => {
   }, [filter, users]);
 
   return (
-    <AuthCard title={`People in ${villageName}`} subtitle="Select a user" backTo="/village-list">
+    <AuthCard title={`${villageName} ગામના લોકો`} subtitle="વપરાશકર્તા પસંદ કરો" backTo="/village-list">
       <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
-        <TextInput placeholder="Search people..." value={filter} onChange={e=>setFilter(e.target.value)} />
-        {loading && <p style={{ fontSize:'0.85rem' }}>Loading...</p>}
+        <TextInput placeholder="લોકોને શોધો..." value={filter} onChange={e=>setFilter(e.target.value)} />
+        {loading && <p style={{ fontSize:'0.85rem' }}>લોડ કરી રહ્યું છે...</p>}
         {error && <div className="field-error" style={{ marginBottom:'0.5rem' }}>{error}</div>}
-        {!loading && !error && filtered.length === 0 && <p style={{ fontSize:'0.8rem' }}>No people match.</p>}
+        {!loading && !error && filtered.length === 0 && <p style={{ fontSize:'0.8rem' }}>કોઈ લોકો મેળ ખાતા નથી..</p>}
         <div style={{ maxHeight:320, overflowY:'auto', borderRadius:12, background:'#fff', padding:'0.5rem', boxShadow:'var(--shadow-soft)' }}>
           {filtered.map(u => (
             <div key={u.id} style={{ padding:'0.6rem 0.7rem', borderBottom:'1px solid var(--color-border)' }}>
