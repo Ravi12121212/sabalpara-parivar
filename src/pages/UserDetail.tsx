@@ -88,8 +88,7 @@ const UserDetail: React.FC = () => {
                   <div className="family-bio">
                     <div style={{ marginBottom: 6 }}>{m.businessDescription || m.std ? (m.businessDescription || m.std) : '—'}</div>
                     <div className="family-meta-row">
-                      {m.memberPhone && <div className="meta-item">📞 {m.memberPhone}</div>}
-                      {m.activityType && <div className="meta-item">🔎 {m.activityType}</div>}
+                      {m.memberPhone && <div className="meta-item">📞 {m.memberPhone}</div>} 
                       {m.businessName && <div className="meta-item">🏷️ {m.businessName}</div>}
                       {m.businessWorkType && <div className="meta-item">💼 {m.businessWorkType}</div>}
                       {m.relation && <div className="meta-item">🧭 {m.relation}</div>}
