@@ -255,9 +255,9 @@ const CommitteeMembers: React.FC = () => {
               <div>
                 <label htmlFor="addImageFile" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Photo</label>
                 <input id="addImageFile" type="file" accept=".jpg,.jpeg,.png,.webp" onChange={pickAddImage} style={{ display: 'none' }} />
-                <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <button type="button" onClick={() => document.getElementById('addImageFile')?.click()} style={{ height: 40, padding: '0 12px', borderRadius: 8, border: '1px solid #9e9e9e', background: '#f2f2f2', fontWeight: 600 }}>{uploading ? 'Uploading…' : 'Choose Image'}</button>
-                  <span style={{ fontSize:12, color:'#666' }}>{file?.name || 'Required'}</span>
+                  <span style={{ fontSize: 12, color: '#666' }}>{file?.name || 'Required'}</span>
                 </div>
               </div>
               <button type="submit" disabled={saving || uploading} className="add-form-submit" style={{ height: 40, padding: '0 16px', borderRadius: 8, border: '1px solid #1976d2', background: saving ? '#90caf9' : '#2196f3', color: 'white', fontWeight: 700 }}>{saving ? 'Adding…' : 'Add Member'}</button>
@@ -289,9 +289,9 @@ const CommitteeMembers: React.FC = () => {
                       <div>
                         <label htmlFor={`editImage-${idx}`} style={{ display: 'block', fontSize: 12, color: '#555', marginBottom: 4 }}>Photo</label>
                         <input id={`editImage-${idx}`} type="file" accept=".jpg,.jpeg,.png,.webp" onChange={pickEditImage} style={{ display: 'none' }} />
-                        <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                           <button type="button" onClick={() => document.getElementById(`editImage-${idx}`)?.click()} style={{ height: 38, padding: '0 12px', borderRadius: 8, border: '1px solid #9e9e9e', background: '#f2f2f2', fontWeight: 600 }}>{uploading ? 'Uploading…' : 'Choose Image'}</button>
-                          <span style={{ fontSize:12, color:'#666' }}>{editFile?.name || (editImageUrl ? 'Existing' : 'Optional')}</span>
+                          <span style={{ fontSize: 12, color: '#666' }}>{editFile?.name || (editImageUrl ? 'Existing' : 'Optional')}</span>
                         </div>
                       </div>
                     </div>
@@ -319,11 +319,6 @@ const CommitteeMembers: React.FC = () => {
                     <div className="member-name">{m.memberName}</div>
                     <div className="member-post">{m.post}</div>
                     <div className="member-contact">{m.contactNumber ? `+91 ${m.contactNumber}` : ''}</div>
-                    <div className="member-social">
-                      <span style={{ opacity: 0.9 }}>●</span>
-                      <span style={{ opacity: 0.6 }}>●</span>
-                      <span style={{ opacity: 0.6 }}>●</span>
-                    </div>
                   </>
                 )}
               </div>

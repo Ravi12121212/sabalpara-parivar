@@ -49,6 +49,7 @@ const App: React.FC = () => {
 
   const isAuthRoute = [
     "/",
+    "/previous-year-result",
     "/login",
     "/signup",
     "/forgot-password",

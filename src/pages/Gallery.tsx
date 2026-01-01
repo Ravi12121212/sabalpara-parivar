@@ -46,6 +46,61 @@ const GalleryPage: React.FC = () => {
     }
   };
 
+  const downloadCurrentImage = async () => {
+    const current = items[viewerIndex];
+    if (!current?.imageUrl) return;
+
+    const imageUrl = fileUrl(current.imageUrl);
+    const fileName =
+      (current.title?.replace(/\s+/g, '_') || 'gallery-image') +
+      '-' +
+      (viewerIndex + 1) +
+      '.jpg';
+
+    try {
+      const img = new Image();
+      img.crossOrigin = 'anonymous'; // important for canvas export
+      img.src = imageUrl;
+
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = reject;
+      });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Canvas not supported');
+
+      // draw image
+      ctx.drawImage(img, 0, 0);
+
+      // export as JPG
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return;
+
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        },
+        'image/jpeg',
+        0.95 // quality (0–1)
+      );
+    } catch (err) {
+      setError('Failed to download image');
+    }
+  };
+
+
+
   useEffect(() => { load(); }, []);
 
   // debounce search
@@ -70,8 +125,8 @@ const GalleryPage: React.FC = () => {
   const onPick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fl = Array.from(e.target.files || []);
     if (!fl.length) return;
-    const allowed = ['image/jpeg','image/png','image/webp','image/jpg'];
-    const valid = fl.filter(f => allowed.includes(f.type) && f.size <= 5*1024*1024);
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    const valid = fl.filter(f => allowed.includes(f.type) && f.size <= 5 * 1024 * 1024);
     if (!valid.length) { setError('Only JPG/PNG/WEBP up to 5MB'); return; }
     setError(null);
     setFiles(valid);
@@ -89,7 +144,7 @@ const GalleryPage: React.FC = () => {
       setFiles([]);
       setTitle('');
       (document.getElementById('gallery-file') as HTMLInputElement | null)?.value && ((document.getElementById('gallery-file') as HTMLInputElement).value = '');
-        setError(null);
+      setError(null);
     } catch (e: any) {
       const msg = e?.response?.data?.message || e?.message || 'Failed to add';
       setError(msg);
@@ -104,7 +159,7 @@ const GalleryPage: React.FC = () => {
     try {
       await gallery.remove(id);
       setItems(items.filter(i => (i.id || i._id) !== id));
-        setError(null);
+      setError(null);
     } catch (e: any) {
       const msg = e?.response?.data?.message || e?.message || 'Failed to delete';
       setError(msg);
@@ -126,7 +181,7 @@ const GalleryPage: React.FC = () => {
         return;
       }
       setViewerIndex((prev) => Math.min(prev, nextItems.length - 1));
-        setError(null);
+      setError(null);
     } catch (e: any) {
       const msg = e?.response?.data?.message || e?.message || 'Failed to delete';
       setError(msg);
@@ -155,16 +210,16 @@ const GalleryPage: React.FC = () => {
   return (
     <div className="gallery-page" style={{ maxWidth: 980, margin: '0 auto', padding: '1rem' }}>
       <h2 style={{ margin: '0 0 1rem', fontSize: 24, fontWeight: 800 }}>Gallery</h2>
-      {error && <div style={{ background:'#fdecea', border:'1px solid #f5c2c0', padding: '0.5rem 0.75rem', color:'#b23b34', borderRadius:8, marginBottom:'0.75rem' }}>{error}</div>}
+      {error && <div style={{ background: '#fdecea', border: '1px solid #f5c2c0', padding: '0.5rem 0.75rem', color: '#b23b34', borderRadius: 8, marginBottom: '0.75rem' }}>{error}</div>}
 
       {/* Search */}
       <div style={{ marginBottom: '0.75rem' }} ref={searchRef}>
         <input
           value={search}
-          onChange={(e)=>{ setSearch(e.target.value); setShowDropdown(true); }}
+          onChange={(e) => { setSearch(e.target.value); setShowDropdown(true); }}
           onFocus={() => setShowDropdown(true)}
           placeholder="Search by title…"
-          style={{ width:'100%', height:40, border:'1px solid #c7c7c7', borderRadius:8, padding:'0 12px' }}
+          style={{ width: '100%', height: 40, border: '1px solid #c7c7c7', borderRadius: 8, padding: '0 12px' }}
         />
         {showDropdown && titles.length > 0 && (
           <div style={{ position: 'relative' }}>
@@ -183,17 +238,17 @@ const GalleryPage: React.FC = () => {
       </div>
 
       {isAdmin && (
-        <section style={{ background:'#fffef5', border:'1px solid #ffe08a', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', borderRadius: 14, padding: '1.25rem', marginBottom: '1.25rem' }}>
+        <section style={{ background: '#fffef5', border: '1px solid #ffe08a', boxShadow: '0 2px 10px rgba(0,0,0,0.06)', borderRadius: 14, padding: '1.25rem', marginBottom: '1.25rem' }}>
           <h3 style={{ margin: 0, marginBottom: '0.75rem', fontSize: 18, fontWeight: 600 }}>Add Images</h3>
           <form onSubmit={onAdd} className="add-form-grid" style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: '1.1fr 0.9fr auto', alignItems: 'end' }}>
             <div>
-              <label htmlFor="gallery-title" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Title <span style={{ color:'#b23b34' }}>(required)</span></label>
-              <input id="gallery-title" value={title} onChange={(e)=>setTitle(e.target.value)} placeholder="e.g. Event 2025" style={{ width: '100%', height: 40, padding: '0 12px', borderRadius: 8, border: '1px solid #c7c7c7', background: '#fff' }} />
+              <label htmlFor="gallery-title" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Title <span style={{ color: '#b23b34' }}>(required)</span></label>
+              <input id="gallery-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Event 2025" style={{ width: '100%', height: 40, padding: '0 12px', borderRadius: 8, border: '1px solid #c7c7c7', background: '#fff' }} />
             </div>
             <div>
               <label htmlFor="gallery-file" style={{ display: 'block', fontSize: 13, color: '#555', marginBottom: 4 }}>Images</label>
               <div className="file-picker">
-                <input id="gallery-file" type="file" accept=".jpg,.jpeg,.png,.webp" multiple onChange={onPick} style={{ position:'absolute', width:1, height:1, padding:0, margin:-1, overflow:'hidden', clip:'rect(0 0 0 0)', border:0 }} />
+                <input id="gallery-file" type="file" accept=".jpg,.jpeg,.png,.webp" multiple onChange={onPick} style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0 0 0 0)', border: 0 }} />
                 <label htmlFor="gallery-file" className="file-picker-button">Select images</label>
                 <div className={`file-picker-filename ${files.length ? '' : 'muted'}`}>{files.length ? `${files.length} file(s)` : 'No file chosen'}</div>
               </div>
@@ -212,9 +267,9 @@ const GalleryPage: React.FC = () => {
           {items.map((item, idx) => {
             const id = (item.id || item._id)!;
             return (
-              <div key={id} style={{ background:'#fff', border:'1px solid #eee', borderRadius:10, overflow:'hidden', boxShadow:'0 2px 8px rgba(0,0,0,0.04)'}}>
-                <div style={{ position:'relative', paddingTop:'70%', overflow:'hidden', cursor:'zoom-in' }} onClick={()=>openViewer(idx)}>
-                  <img src={fileUrl(item.imageUrl)} alt={item.title || 'Gallery'} style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover' }} />
+              <div key={id} style={{ background: '#fff', border: '1px solid #eee', borderRadius: 10, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                <div style={{ position: 'relative', paddingTop: '70%', overflow: 'hidden', cursor: 'zoom-in' }} onClick={() => openViewer(idx)}>
+                  <img src={fileUrl(item.imageUrl)} alt={item.title || 'Gallery'} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 {/* Action bar removed as per requirement (delete only inside lightbox) */}
               </div>
@@ -247,6 +302,13 @@ const GalleryPage: React.FC = () => {
             <button className="lightbox-prev" aria-label="Previous" onClick={prevImage}>‹</button>
             <img src={fileUrl(items[viewerIndex].imageUrl)} alt="View" />
             <button className="lightbox-next" aria-label="Next" onClick={nextImage}>›</button>
+            <button
+              className="lightbox-download"
+              title="Download"
+              onClick={downloadCurrentImage}
+            >
+              ⬇️
+            </button>
             {isAdmin && (
               <button className="lightbox-delete" aria-label="Delete" title="Delete" onClick={deleteCurrent}>🗑️</button>
             )}

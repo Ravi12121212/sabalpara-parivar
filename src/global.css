@@ -1397,6 +1397,21 @@ a:hover {
     color: #374151;
 }
 
+.lightbox-download {
+    position: absolute;
+    right: 65px;
+    bottom: 16px;
+    height: 40px;
+    width: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    font-size: 20px;
+    color: #b00020;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
 @media (max-width: 900px) {
     .village-grid {
         grid-template-columns: repeat(2, 1fr);
