@@ -540,6 +540,7 @@ const ProfileManage: React.FC = () => {
                 <input
                   className="input"
                   placeholder="Member Phone (optional)"
+                  type="number"
                   value={m.memberPhone || ""}
                   onChange={(e) =>
                     updateMember(idx, { memberPhone: e.target.value })
